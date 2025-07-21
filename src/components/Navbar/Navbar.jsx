@@ -27,7 +27,7 @@ export default function NavBar() {
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                             fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" 
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
+                            strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7"/>
                             </svg>
                             </button>
                             {showCategories && (
@@ -94,41 +94,53 @@ export default function NavBar() {
                 {/* Mobile Dropdown Menu */}
                 {showMenu && (
                     <div className="flex flex-col md:hidden mt-4 space-y-2">
-                        <Link 
-                            to="/categories/mates" 
-                            className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
-                            onClick={() => setShowMenu(false)}
-                        >
-                            Mates
-                        </Link>
-                        <Link 
-                            to="/categories/termos" 
-                            className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
-                            onClick={() => setShowMenu(false)}
-                        >
-                            Termos
-                        </Link>
-                        <Link 
-                            to="/login" 
-                            className="text-black px-4 py-2 font-medium"
-                            onClick={() => setShowMenu(false)}
-                        >
-                            Ingresá
-                        </Link>
-                        <Link to="/register" 
-                            className="text-black px-4 py-2 font-medium"
-                            onClick={() => setShowMenu(false)}
-                        >
-                            Registrarse
-                        </Link>
+                            <Link 
+                                    to="/categories/mates" 
+                                    className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                >
+                                    Mates
+                            </Link>
+                            <Link 
+                                    to="/categories/termos" 
+                                    className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                >
+                                    Termos
+                            </Link>
+                        {user ? (
+                            <>
+                                <LoginLogo />
+                                <Link 
+                                    to="/cart" 
+                                    className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                                >
+                                    <CartWidget/>
+                                    <span>Carrito</span>
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link 
+                                    to="/login" 
+                                    className="text-black px-4 py-2 font-medium"
+                                >
+                                    Ingresá
+                                </Link>
+                                <Link 
+                                    to="/register" 
+                                    className="text-black px-4 py-2 font-medium"
+                                >
+                                    Registrarse
+                                </Link>
                         <Link 
                             to="/cart" 
                             className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                             onClick={() => setShowMenu(false)}
                         >
                             <CartWidget/>
-                        <span>Carrito</span>
+                            <span>Carrito</span>
                         </Link>
+                            </>
+                        )}
                     </div>
                 )}
             </div>

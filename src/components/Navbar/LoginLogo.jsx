@@ -1,10 +1,11 @@
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginLogo() {
     const { user, logout } = useContext(AuthContext);
     const [showDropdown, setShowDropdown] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div className="relative">
@@ -19,19 +20,20 @@ export default function LoginLogo() {
             </button>
 
             {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link 
                         to="/profile" 
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-yellow-100"
+                        className="block text-center px-4 py-2 text-sm hover:bg-yellow-400 rounded-lg transition-all duration-300 font-medium"
                     >
-                        Mi Perfil
+                        👤 Mi Perfil
                     </Link>
                     <button
                         onClick={() => {
                             logout();
                             setShowDropdown(false);
+                            navigate("/");
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-yellow-100"
+                        className="block w-full px-4 py-2 text-sm hover:bg-red-400 rounded-lg transition-all duration-300 font-medium"
                     >
                         Cerrar Sesión
                     </button>

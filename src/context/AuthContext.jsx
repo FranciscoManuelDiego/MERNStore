@@ -1,9 +1,20 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const savedUser = localStorage.getItem("user")
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        }else{
+            localStorage.removeItem("user");
+        }
+    }, [user]);
 
      const login = async (credentials) => {
         try {
@@ -39,11 +50,14 @@ export const AuthProvider = ({ children }) => {
             });
             if (response.ok) {
                 setUser(null);
+
             }
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
+
+
 
     return (
         <AuthContext.Provider value={{ user, login, logout }}>

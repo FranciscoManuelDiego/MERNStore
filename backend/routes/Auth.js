@@ -75,7 +75,23 @@ router.post('/logout', (req, res) => {
     res.json({ message: "Logout successful" });
 });
 
-// updating the user's password
+//Get User Profile
+router.get("/profile", async (req, res) => {
+    const userToken = req.cookies.token; // Get the token from cookies.
+    if (!userToken) {
+        return res.status(401).json({message: "Unathorized"})
+    }
+    try {
+        const decodedToken = jwt.verify(userToken, process.env.JWT_SECRET);
+        const user = await User.findById(decodedToken.id).select("-password"); // This method is provided by Mongo and tells to exclude by a - sign he property requested.
+        return res.json(user);
+    }catch (error) {
+        console.error("Profile retrieval error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    };
+});
+
+// Updating the user's password
 router.put("/password", async (req , res) => { 
     const {username, newPassword } = req.body;
     const hashedPassword = await bcrypt.hash(newPassword, 10);

@@ -30,11 +30,10 @@ export default function Login() {
       return;
     } 
     try {
-        const response = await login({
-            email: form.email,
-            password: form.password
+        await login({
+          email: form.email,
+          password: form.password
         });
-        console.log('Login response:', response);
         alert("Usuario logueado exitosamente");
         formRef.current.reset();
         setForm({
