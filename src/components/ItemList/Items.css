@@ -1,0 +1,33 @@
+.Items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    text-align: center;
+    margin: 2%;
+}
+
+.Items img {
+    width: 20rem;
+    height: 20rem;
+    object-fit: contain;
+    margin: auto;
+}
+
+ul {
+    background-color: #282c34;
+    text-align: center;
+}
+
+@media (max-width: 700px) and (min-width:200px) {
+    .Items {
+        margin-top: 2%;
+        margin: 0;
+        justify-content: space-between;
+    }
+    .Items img {
+        width: 15rem;
+        height: 15rem;
+        object-fit: contain;
+    }
+}
