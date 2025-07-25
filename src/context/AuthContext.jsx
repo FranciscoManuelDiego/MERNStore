@@ -8,6 +8,9 @@ export const AuthProvider = ({ children }) => {
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
+    const [profile, setProfile] = useState(null);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+
     useEffect(() => {
         if (user) {
             localStorage.setItem("user", JSON.stringify(user));
@@ -57,10 +60,42 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const fetchProfileData = async () => {
+        setIsLoadingProfile(true);
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/profile', {
+                method: 'GET',
+                credentials: 'include',
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setProfile(data);
+            }
+        } catch (error) {
+            console.error('Error fetching profile:', error);
+        } finally {
+            setIsLoadingProfile(false);
+        }
+    };
+
+    useEffect(() => {
+        if(user){
+            fetchProfileData();
+        } else {
+            setProfile(null);
+        }
+    }, [user]);
 
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ 
+            user,
+            login,
+            logout,
+            profile,
+            isLoadingProfile,
+            refreshProfile: fetchProfileData,
+        }}>
             {children}
         </AuthContext.Provider>
     );

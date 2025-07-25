@@ -7,6 +7,8 @@ export default function Register() {
     firstName: "",
     surname: "",
     email: "",
+    phonenumber: "",
+    address: "",
     password: ""
   });
 
@@ -21,7 +23,7 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.firstName || !form.surname || !form.email || !form.password) {
+    if (!form.firstName || !form.surname || !form.email || !form.password || !form.phonenumber || !form.address) {
       setIsRequired(true);
       return;
     } // After the fields are validated, you can proceed with form submission logic
@@ -43,7 +45,9 @@ export default function Register() {
               firstName: "",
               surname: "",
               email: "",
-              password: ""
+              address: "",
+              phonenumber: "",
+              password: "",
             });
             navigate("/"); // Redirect to home page after successful registration
           }
@@ -98,6 +102,34 @@ export default function Register() {
           <span className="block text-red-500 text-xs mt-1">* E-mail requerido</span>
         )}
 
+        <label className="block mt-2 ml-2 text-black font-medium">Direccion</label>
+        <input
+          type="text"
+          name="address"
+          value={form.address}
+          onChange={handleChange}
+          placeholder="Escribe tu dirección"
+          className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+          required={isRequired}
+        />
+        {isRequired && !form.address && (
+          <span className="block text-red-500 text-xs mt-1">* Dirección requerida</span>
+        )}
+
+        <label className="block mt-2 ml-2 text-black font-medium">Telefono</label>
+        <input
+          type="text"
+          name="phonenumber"
+          value={form.phonenumber}
+          onChange={handleChange}
+          placeholder="Escribe tu teléfono"
+          className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+          required={isRequired}
+        />
+        {isRequired && !form.phonenumber && (
+          <span className="block text-red-500 text-xs mt-1">* Teléfono requerido</span>
+        )}
+
         <label className="block mt-2 ml-2 text-black font-medium">Contraseña</label>
         <input
           type="password"
@@ -111,7 +143,6 @@ export default function Register() {
         {isRequired && !form.password && (
           <span className="block text-red-500 text-xs mt-1">* Contraseña requerida</span>
         )}
-
         <button
           type="submit"
           className="bg-yellow-400 block py-2 px-5 mt-4 outline-none w-fit text-black font-bold shadow-md shadow-primary rounded-xl hover:bg-yellow-300 transition-colors duration-200"

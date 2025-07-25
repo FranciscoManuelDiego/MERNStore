@@ -5,23 +5,34 @@ const User = require('../models/User');
 const router = express.Router() // Creates an instance of a class that handles logic and features for connections.
 
 router.post('/register', async (req, res) => {
-    try{
-        console.log("Register request body:", req.body);
-        const {firstName, surname, email, password } = req.body;
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "Usuario ya registrado" });
-        }
-        const hashedPassword = await bcrypt.hash(password, 10); // This line that indicates 10 means that these are the salt rounds, i.e. the process by which combinations create a hash.
-        //at a higher number, the more secure but it takes longer to hash and therefore more computer power is needed.
-        const user = new User({firstName, surname, email, password: hashedPassword})
-        console.log("User object before save:", user); // Log user object before saving
-        await user.save()
-        console.log("User saved successfully"); // Log after successful save
-        res.json({ message: "User registered"})
+    try {
+        // Log the entire request body
+        console.log("Full registration request:", req.body);
+        const { firstName, surname, email, password, address, phone } = req.body;
+
+        // Log what we're receiving
+        console.log("Registration data:", { firstName, surname, email, address, phone });
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        
+        // Create user with address
+        const newUser = new User({
+            firstName,
+            surname,
+            email,
+            password: hashedPassword,
+            phone,
+            address,
+        });
+        
+        await newUser.save();
+        console.log("User saved:", newUser);
+        
+        res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-        console.error("Registration error:", error); // Log full error object
-        res.status(500).json({ message: error.message, error }); // Return full error object for debugging
+        console.error("Registration error:", error);
+        res.status(500).json({ message: "Error registering user" });
     }
 });
 
@@ -111,5 +122,150 @@ router.delete("/:email", async (req, res) => {
     if(!user) return res.status(404).json({ message: "User not found"});
     res.json({message: "User deleted "})
 })
+
+// Update address
+router.put("/profile/address", async (req, res) => {
+   const token = req.cookies.token;
+   console.log("Address update request received");
+   console.log("Request body:", req.body);
+   console.log("Token exists:", !!token);
+   
+   if (!token) {
+       return res.status(401).json({ message: "No autenticado" });
+   }
+   
+   try {
+       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+       console.log("Decoded token user ID:", decoded.id);
+       
+       const { address } = req.body;
+       console.log("Extracted address:", address);
+       
+       if (!address) {
+           return res.status(400).json({ message: "La dirección es requerida" });
+       }
+       
+       // Find user first to check if it exists
+       const userExists = await User.findById(decoded.id);
+
+       if (!userExists) {
+           return res.status(404).json({ message: "Usuario no encontrado" });
+       }
+       
+       // Update address in MongoDB
+       const updatedUser = await User.findByIdAndUpdate(
+           decoded.id,
+           { address },
+           { new: true }  // Return updated document
+       ).select("-password");
+       
+       console.log("Updated user:", updatedUser);
+       
+       return res.json(updatedUser);
+   } catch (error) {
+       console.error("Error updating address:", error);
+       return res.status(500).json({ message: "Error interno del servidor", error: error.message });
+   }
+});
+
+router.put("/profile/password", async (req, res) => {
+    const token = req.cookies.token;
+    if(!token) {
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decodedToken.id);
+        if(!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        const { currentPassword, newPassword } = req.body;
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if(!isPasswordValid) {
+            return res.status(400).json({message: "Current password is incorrect"});
+        }
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+        res.json({message: "Password updated successfully"});
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+});
+
+router.put("/profile/email", async (req, res) => {
+    const token = req.cookies.token;
+    if(!token) {
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decodedToken.id);
+        if(!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        const { email } = req.body;
+        user.email = email;
+        await user.save();
+        res.json({message: "Email updated successfully",
+            user: {
+                email: user.email,
+                firstName: user.firstName,
+                address: user.address,
+                phone: user.phone
+            }
+        });
+    } catch (error) {
+        console.error("Error updating email:", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+});
+
+router.put("/profile/phone", async (req, res) => {
+    const token = req.cookies.token;
+    if(!token) {
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decodedToken.id);
+        if(!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        const { phone } = req.body;
+        user.phone = phone;
+        await user.save();
+        res.json({message: "Phone updated successfully",
+            user: {
+                email: user.email,
+                firstName: user.firstName,
+                address: user.address,
+                phone: user.phone
+            }
+        });
+    } catch (error) {
+        console.error("Error updating phone:", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+});
+
+router.delete("/profile", async (req, res) => {
+    const token = req.cookies.token;
+    if(!token) {
+        return res.status(401).json({message: "Unauthorized"});
+    }
+    try {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findByIdAndDelete(decodedToken.id);
+        if(!user) {
+            return res.status(404).json({message: "User not found"});
+        }
+        res.clearCookie("token");
+        res.json({message: "User deleted successfully"});
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({message: "Internal server error"});
+    }
+});
 
 module.exports = router;
