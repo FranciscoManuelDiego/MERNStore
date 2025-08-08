@@ -1,0 +1,65 @@
+body {
+    background-color: #282c34; 
+}
+
+.Alert :is(h1 , p) {
+    text-align: center;
+}
+.CloseButton {
+    display: block;
+    justify-self: left;
+}
+
+.cart {
+    margin: 2% auto;
+    text-align: center;
+    width: 30rem;
+}
+
+.cart img{
+    width: 20rem;
+    height: 20rem;
+    object-fit: contain;
+    margin: auto;
+}
+
+.Alert{
+    padding:5rem;
+}
+
+.ButtonAlert {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    text-align: center;
+    padding: 1rem;
+}
+
+.CartText {
+    width: 30rem;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin: auto;
+    text-align: center;
+    background-color: white;
+}
+
+.CartButtons {
+    margin: 0.10rem;
+}
+
+@media (max-width: 700px) and (min-width:200px) {
+    .cart {
+        width:20rem;
+    }
+    .CartText {
+        width: 20rem;
+    }
+    .cart img {
+        width: 15rem;
+        height: 15rem;
+    }
+    .CartButtons {
+        padding: 0.30rem;
+    }
+}
