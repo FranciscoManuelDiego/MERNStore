@@ -4,21 +4,37 @@ import { createContext, useEffect, useState } from 'react';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => {
-        const savedUser = localStorage.getItem("user")
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+    const [user, setUser] = useState(null);
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    // Initialize user from localStorage on client-side only
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedUser = localStorage.getItem("user");
+            if (savedUser) {
+                try {
+                    setUser(JSON.parse(savedUser));
+                } catch (error) {
+                    console.error('Error parsing saved user:', error);
+                    localStorage.removeItem("user");
+                }
+            }
+        }
+        setIsInitialized(true);
+    }, []);
 
     const [profile, setProfile] = useState(null);
     const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
     useEffect(() => {
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user));
-        }else{
-            localStorage.removeItem("user");
+        if (typeof window !== 'undefined' && isInitialized) {
+            if (user) {
+                localStorage.setItem("user", JSON.stringify(user));
+            } else {
+                localStorage.removeItem("user");
+            }
         }
-    }, [user]);
+    }, [user, isInitialized]);
 
      const login = async (credentials) => {
         try {
@@ -96,6 +112,7 @@ export const AuthProvider = ({ children }) => {
             profile,
             isLoadingProfile,
             refreshProfile: fetchProfileData,
+            isInitialized, // Add this so components know when auth is ready
         }}>
             {children}
         </AuthContext.Provider>

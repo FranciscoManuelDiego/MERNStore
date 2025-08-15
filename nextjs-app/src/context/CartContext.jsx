@@ -1,21 +1,36 @@
 "use client";
-import { useContext, useState, createContext, useEffect } from "react"
-import  axios from "axios";
-export const CartContext = createContext([]);
+import { createContext, useState, useEffect } from 'react';
 
-export const useCartContext = () => useContext(CartContext)
-// Esto lo que hace es enviar mi contexto para poder ser utilizado en alguno de mis componentes
-const CartProvider = ({children}) => {
-    const [cart, setCart] = useState(() => {
-         const gettingItem = JSON.parse(localStorage.getItem("cart"));
-         return gettingItem ? gettingItem : [];
-    });
+export const CartContext = createContext();
 
-    
-    // Save to localStorage whenever cart changes
+const CartProvider = ({ children }) => {
+    const [cart, setCart] = useState([]);
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    // Initialize cart from localStorage on client-side only
     useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
-    }, [cart]);
+        if (typeof window !== 'undefined') {
+            const savedCart = localStorage.getItem("cart");
+            if (savedCart) {
+                try {
+                    const parsedCart = JSON.parse(savedCart);
+                    setCart(Array.isArray(parsedCart) ? parsedCart : []);
+                } catch (error) {
+                    console.error('Error parsing saved cart:', error);
+                    localStorage.removeItem("cart");
+                    setCart([]);
+                }
+            }
+        }
+        setIsInitialized(true);
+    }, []);
+    
+    // Save to localStorage whenever cart changes (only after initialization)
+    useEffect(() => {
+        if (typeof window !== 'undefined' && isInitialized) {
+            localStorage.setItem("cart", JSON.stringify(cart));
+        }
+    }, [cart, isInitialized]);
 
     const getCart = async (credentials) => {
         try {

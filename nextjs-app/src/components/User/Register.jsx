@@ -1,8 +1,9 @@
+"use client"
 import { useState, useRef} from "react";
-import {useNavigate} from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: "",
     surname: "",
@@ -49,7 +50,7 @@ export default function Register() {
               phonenumber: "",
               password: "",
             });
-            navigate("/"); // Redirect to home page after successful registration
+            router.push("/"); // Redirect to home page after successful registration
           }
         })
         .catch(error => {console.error("Error:", error)

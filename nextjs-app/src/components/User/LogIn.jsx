@@ -2,11 +2,11 @@
 import { useState, useRef} from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext"; // Adjust the path as needed
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useRouter } from "next/navigation"; // Import useRouter for redirection
 
 export default function Login() {
   const { login } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     firstName: "",
@@ -41,7 +41,7 @@ export default function Login() {
           email: "",
           password: ""
         });
-        navigate("/"); // Redirect to home page after successful login
+        router.push("/"); // Redirect to home page after successful login
     } catch (error) {
         console.error('Login failed:', error.message);
         alert(error.message || "Error al ingresar usuario");

@@ -1,11 +1,11 @@
 "use client";
 import { useState, useContext  } from 'react';
 import { AuthContext } from '../../context/AuthContext'; // Adjust the path as needed
-import { Link } from 'next/navigation'; // Use Link from next/navigation for client-side navigation
+import Link from 'next/link'; // Use Link from next/link for Next.js navigation
 import CartWidget from '../CartWidget';
 import LoginLogo from './LoginLogo';
 
-export default function NavBar() {
+export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const {user} = useContext(AuthContext);
@@ -15,7 +15,7 @@ export default function NavBar() {
             <div className="container mx-auto px-6 py-4">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center space-x-2 text-black">
+                    <Link href="/" className="flex items-center space-x-2 text-black">
                         <span className="text-3xl">🧉</span>
                         <span className="text-2xl font-bold tracking-wide">Matecitos</span>
                     </Link>
@@ -34,14 +34,16 @@ export default function NavBar() {
                             {showCategories && (
                                 <div className='absolute left-0 top-full flex flex-col bg-white shadow-lg rounded-lg p-4 space-y-2'>
                                 <Link 
-                                    to="/categories/mates" 
+                                    href="/categories/mates" 
                                     className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    onClick={() => setShowCategories(false)}
                                 >
                                     Mates
                                 </Link>
                                 <Link 
-                                    to="/categories/termos" 
+                                    href="/categories/termos" 
                                     className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    onClick={() => setShowCategories(false)}
                                 >
                                     Termos
                                 </Link>
@@ -52,7 +54,7 @@ export default function NavBar() {
                             <>
                                 <LoginLogo />
                                 <Link 
-                                    to="/cart" 
+                                    href="/cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
                                     <CartWidget/>
@@ -62,19 +64,19 @@ export default function NavBar() {
                         ) : (
                             <>
                                 <Link 
-                                    to="/login" 
+                                    href="/login" 
                                     className="text-black px-4 py-2 font-medium"
                                 >
                                     Ingresá
                                 </Link>
                                 <Link 
-                                    to="/register" 
+                                    href="/register" 
                                     className="text-black px-4 py-2 font-medium"
                                 >
                                     Registrarse
                                 </Link>
                                 <Link 
-                                    to="/cart" 
+                                    href="/cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
                                     <CartWidget/>
@@ -96,14 +98,16 @@ export default function NavBar() {
                 {showMenu && (
                     <div className="flex flex-col md:hidden mt-4 space-y-2">
                             <Link 
-                                    to="/categories/mates" 
+                                    href="/categories/mates" 
                                     className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    onClick={() => setShowMenu(false)}
                                 >
                                     Mates
                             </Link>
                             <Link 
-                                    to="/categories/termos" 
+                                    href="/categories/termos" 
                                     className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    onClick={() => setShowMenu(false)}
                                 >
                                     Termos
                             </Link>
@@ -111,7 +115,7 @@ export default function NavBar() {
                             <>
                                 <LoginLogo />
                                 <Link 
-                                    to="/cart" 
+                                    href="/cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
                                     <CartWidget/>
@@ -121,19 +125,19 @@ export default function NavBar() {
                         ) : (
                             <>
                                 <Link 
-                                    to="/login" 
+                                    href="/login" 
                                     className="text-black px-4 py-2 font-medium"
                                 >
                                     Ingresá
                                 </Link>
                                 <Link 
-                                    to="/register" 
+                                    href="/register" 
                                     className="text-black px-4 py-2 font-medium"
                                 >
                                     Registrarse
                                 </Link>
                         <Link 
-                            to="/cart" 
+                            href="/cart" 
                             className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                             onClick={() => setShowMenu(false)}
                         >

@@ -1,26 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Kanit} from "next/font/google";
 import "./globals.css";
 
 // Import your components (just like in your original App.js)
-import NavBar from '../components/Navbar/Navbar';
+import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
 import { AuthProvider } from '../context/AuthContext';
-import CartContext from '../context/CartContext';
+import CartProvider from '../context/CartContext';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const kanit = Kanit({
+      subsets: ['latin'],
+      weight: ['400', '700'], // Specify the weights you need
+      display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+
 
 export const metadata: Metadata = {
-  title: "MERN Store",
+  title: "Matecitos | MERN store",
   description: "Tu tienda de mates y termos favorita",
+  icons: {
+    icon: '/MatecitoIcon.png',
+    shortcut: '/MatecitoIcon.png',
+    apple: '/MatecitoIcon.png',
+  },
 };
 
 export default function RootLayout({
@@ -29,15 +32,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="es">
+      <body className={`${kanit.className} antialiased`}>
         {/* Replicate your App.js structure exactly */}
         <AuthProvider>
-          <CartContext>
-            <NavBar />
+          <CartProvider>
+            <Navbar />
             <main>{children}</main>
             <Footer />
-          </CartContext>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

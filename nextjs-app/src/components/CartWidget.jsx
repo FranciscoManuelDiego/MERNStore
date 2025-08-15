@@ -16,7 +16,7 @@ const CartWidget = () => {
 
     return (
     <>
-    <FontAwesomeIcon className="Cart" icon={faCartShopping}/> <span>{total+ " "}</span>
+    <span>Cart</span>
     </> 
     );
 }
