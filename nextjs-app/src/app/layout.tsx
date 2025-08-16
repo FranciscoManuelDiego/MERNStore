@@ -33,12 +33,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${kanit.className} antialiased`}>
+      <body className={`${kanit.className} antialiased min-h-screen flex flex-col`}>
         {/* Replicate your App.js structure exactly */}
         <AuthProvider>
           <CartProvider>
             <Navbar />
-            <main>{children}</main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </CartProvider>
         </AuthProvider>

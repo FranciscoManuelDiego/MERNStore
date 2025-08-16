@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cors(
   {
-    origin: 'http://localhost:3001', // This takes the origin of the React App
+    origin: ['http://localhost:3001', "http://localhost:3000"], // Allows both ports for frontend and backend
     credentials: true // Allow cookies if needed
   }
 ));

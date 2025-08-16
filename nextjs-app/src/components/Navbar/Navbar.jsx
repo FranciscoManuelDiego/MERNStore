@@ -2,8 +2,8 @@
 import { useState, useContext  } from 'react';
 import { AuthContext } from '../../context/AuthContext'; // Adjust the path as needed
 import Link from 'next/link'; // Use Link from next/link for Next.js navigation
-import CartWidget from '../CartWidget';
 import LoginLogo from './LoginLogo';
+import { styles } from '../../styles/styleClasses';
 
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
@@ -12,8 +12,8 @@ export default function Navbar() {
 
     return (
         <nav className="bg-white to-yellow-600 shadow-lg border-b-4 border-yellow-400">
-            <div className="container mx-auto px-6 py-4">
-                <div className="flex items-center justify-between">
+            <div className={styles.navContainer}>
+                <div className={styles.navHeader}>
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 text-black">
                         <span className="text-3xl">🧉</span>
@@ -23,26 +23,26 @@ export default function Navbar() {
                     <div className="hidden md:flex items-center space-x-8 relative">
                             {/* Category Links */}
                             <button onClick={() => setShowCategories(!showCategories)}
-                            className='text-black px-4 py-2 font-medium'>Categorias 
+                            className={styles.btnNav}>Categorias 
                             <svg className="w-6 h-6 text-black inline-block ml-1" 
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                             fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" 
+                            <path stroke="black" 
                             strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7"/>
                             </svg>
                             </button>
                             {showCategories && (
-                                <div className='absolute left-0 top-full flex flex-col bg-white shadow-lg rounded-lg p-4 space-y-2'>
+                                <div className={styles.dropdownMenu}>
                                 <Link 
                                     href="/categories/mates" 
-                                    className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    className={styles.btnCategory}
                                     onClick={() => setShowCategories(false)}
                                 >
                                     Mates
                                 </Link>
                                 <Link 
                                     href="/categories/termos" 
-                                    className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"
+                                    className={styles.btnCategory}
                                     onClick={() => setShowCategories(false)}
                                 >
                                     Termos
@@ -55,9 +55,8 @@ export default function Navbar() {
                                 <LoginLogo />
                                 <Link 
                                     href="/cart" 
-                                    className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    className={styles.btnPrimary}
                                 >
-                                    <CartWidget/>
                                     <span>Carrito</span>
                                 </Link>
                             </>
@@ -65,21 +64,20 @@ export default function Navbar() {
                             <>
                                 <Link 
                                     href="/login" 
-                                    className="text-black px-4 py-2 font-medium"
+                                    className={styles.btnNav}
                                 >
                                     Ingresá
                                 </Link>
                                 <Link 
                                     href="/register" 
-                                    className="text-black px-4 py-2 font-medium"
+                                    className={styles.btnNav}
                                 >
                                     Registrarse
                                 </Link>
                                 <Link 
                                     href="/cart" 
-                                    className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    className={styles.btnPrimary}
                                 >
-                                    <CartWidget/>
                                     <span>Carrito</span>
                                 </Link>
                             </>
@@ -87,7 +85,7 @@ export default function Navbar() {
                     </div>
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">
-                        <button className="black" onClick={() => setShowMenu(!showMenu)}>
+                        <button className="text-black" onClick={() => setShowMenu(!showMenu)}>
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
@@ -118,7 +116,7 @@ export default function Navbar() {
                                     href="/cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
-                                    <CartWidget/>
+
                                     <span>Carrito</span>
                                 </Link>
                             </>
@@ -141,7 +139,6 @@ export default function Navbar() {
                             className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                             onClick={() => setShowMenu(false)}
                         >
-                            <CartWidget/>
                             <span>Carrito</span>
                         </Link>
                             </>

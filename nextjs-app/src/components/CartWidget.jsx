@@ -16,7 +16,7 @@ const CartWidget = () => {
 
     return (
     <>
-    <span>Cart</span>
+    <span>{total}</span>
     </> 
     );
 }
