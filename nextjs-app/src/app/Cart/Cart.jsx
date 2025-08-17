@@ -1,6 +1,7 @@
+"use client"
 import { useContext, useState, useEffect } from 'react';
 import { CartContext } from '../../context/CartContext';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 
@@ -70,8 +71,19 @@ const Cart = () => {
             <div className="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h1 className="text-2xl font-bold text-green-600 mb-4">¡Pedido Completado!</h1>
                 <p className="mb-4">Tu pedido ha sido procesado correctamente.</p>
-                <Link to="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                     Seguir Comprando
+                </Link>
+            </div>
+        );
+    }
+
+    if(user === null ){
+        return (
+            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                <h1 className="text-xl font-bold mb-4">Por favor, inicia sesión para ver tu carrito</h1>
+                <Link href="/login" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                    Iniciar Sesión
                 </Link>
             </div>
         );
@@ -83,7 +95,7 @@ const Cart = () => {
             <div className="bg-white shadow-lg rounded-lg p-6 text-center">
                 <h1 className="text-xl font-bold mb-4">No hay productos en tu carrito 😬</h1>
                 <p className="mb-4">Agrega productos y serán aquí mostrados!</p>
-                <Link to="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                     Ver Productos
                 </Link>
             </div>
@@ -164,7 +176,7 @@ const Cart = () => {
                         </button>
                     ) : (
                         <Link 
-                            to="/login" 
+                            href="/login" 
                             className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold text-center py-2 px-4 rounded-md transition duration-300"
                         >
                             Iniciar Sesión para Comprar
@@ -172,7 +184,7 @@ const Cart = () => {
                     )}
                     
                     <Link 
-                        to="/products" 
+                        href="/products" 
                         className="text-yellow-500 hover:text-yellow-700 text-center"
                     >
                         Continuar Comprando
