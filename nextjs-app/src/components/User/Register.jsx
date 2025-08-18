@@ -1,6 +1,7 @@
 "use client"
 import { useState, useRef} from "react";
 import { useRouter } from "next/navigation";
+import { styles } from '../../styles/styleClasses';
 
 export default function Register() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function Register() {
   return (
     <div className="flex justify-center items-center ">
       <form ref={formRef} className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]" onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-bold mb-6">Completa los datos para crear tu cuenta.</h2>
+        <h2 className={styles.formH1}>Completa los datos para crear tu cuenta.</h2>
 
         <label className="block mb-2 ml-2 text-black font-medium">Nombre</label>
         <input

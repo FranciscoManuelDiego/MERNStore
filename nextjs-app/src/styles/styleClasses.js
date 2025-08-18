@@ -1,12 +1,23 @@
 // Reusable style classes for components
 export const styles = {
+  // Header styles
+  cartH1: "text-black text-xl font-bold mb-4",
+
+  formH1:"text-black text-2xl font-bold mb-6",
+
+  subtitleProfile:"text-black text-md font-medium mb-2",
+
   // Button styles
   btnPrimary: "bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105",
   
   btnNav: "text-black px-4 py-2 font-medium cursor-pointer ",
+
+  btnLoginNav: "block text-black text-center px-4 py-2 text-sm",
   
   btnCategory: "text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium",
-  
+
+  btnProfile: "w-full bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50",
+
   // Layout styles
   dropdownMenu: "absolute left-0 top-full flex flex-col bg-white shadow-lg rounded-lg p-4 space-y-2 z-50",
   
@@ -55,7 +66,9 @@ export const styles = {
   pageContainer: "container mx-auto px-4 py-8",
   
   sectionTitle: "text-3xl font-bold text-gray-800 mb-8 text-center",
-  
+
+  cartContainer: "container bg-white shadow-lg rounded-lg p-6 text-center sm:w-[300px] md:w-[400px] mx-auto mt-5",
+
   // Grid layouts
   productGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
   

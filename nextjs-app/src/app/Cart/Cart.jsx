@@ -1,5 +1,6 @@
 "use client"
 import { useContext, useState, useEffect } from 'react';
+import {styles} from '../../styles/styleClasses';
 import { CartContext } from '../../context/CartContext';
 import Link from 'next/link';
 import { AuthContext } from '../../context/AuthContext';
@@ -68,7 +69,7 @@ const Cart = () => {
     // Show order complete message
     if (orderComplete) {
         return (
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+            <div className={styles.cartContainer}>
                 <h1 className="text-2xl font-bold text-green-600 mb-4">¡Pedido Completado!</h1>
                 <p className="mb-4">Tu pedido ha sido procesado correctamente.</p>
                 <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
@@ -80,9 +81,9 @@ const Cart = () => {
 
     if(user === null ){
         return (
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                <h1 className="text-xl font-bold mb-4">Por favor, inicia sesión para ver tu carrito</h1>
-                <Link href="/login" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+            <div className={styles.cartContainer}>
+                <h1 className={styles.cartH1}>Por favor, inicia sesión para ver tu carrito</h1>
+                <Link href="/login" className={styles.btnPrimary}>
                     Iniciar Sesión
                 </Link>
             </div>
@@ -92,10 +93,10 @@ const Cart = () => {
     // Show empty cart message
     if (cart.length === 0) {
         return (
-            <div className="bg-white shadow-lg rounded-lg p-6 text-center">
-                <h1 className="text-xl font-bold mb-4">No hay productos en tu carrito 😬</h1>
+            <div className={styles.cartContainer}>
+                <h1 className={styles.cartH1}>No hay productos en tu carrito 😬</h1>
                 <p className="mb-4">Agrega productos y serán aquí mostrados!</p>
-                <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
+                <Link href="/" className={styles.btnPrimary}>
                     Ver Productos
                 </Link>
             </div>
@@ -104,9 +105,8 @@ const Cart = () => {
 
     // Show cart with items
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Tu Carrito de Compras</h1>
-            
+        <div className={styles.pageContainer}>
+            <h1 className={styles.cartH1}>Tu Carrito de Compras</h1>
             <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
                 {/* Cart header */}
                 <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-600">

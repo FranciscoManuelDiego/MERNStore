@@ -3,14 +3,13 @@ import { useState, useRef} from "react";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext"; // Adjust the path as needed
 import { useRouter } from "next/navigation"; // Import useRouter for redirection
+import { styles } from "../../styles/styleClasses";
 
 export default function Login() {
   const { login } = useContext(AuthContext);
   const router = useRouter();
 
   const [form, setForm] = useState({
-    firstName: "",
-    surname: "",
     email: "",
     password: ""
   });
@@ -31,6 +30,7 @@ export default function Login() {
       return;
     } 
     try {
+        console.log('Attempting login with:', form.email); // Debug log
         await login({
           email: form.email,
           password: form.password
@@ -43,7 +43,7 @@ export default function Login() {
         });
         router.push("/"); // Redirect to home page after successful login
     } catch (error) {
-        console.error('Login failed:', error.message);
+        console.error('Login failed:', error);
         alert(error.message || "Error al ingresar usuario");
     }
 };
@@ -51,7 +51,7 @@ export default function Login() {
   return (
     <div className="flex justify-center items-center ">
       <form ref={formRef} className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]" onSubmit={handleSubmit}>
-        <h2 className="text-2xl font-bold mb-6"> Ingresa tu e-mail para iniciar sesión</h2>
+        <h2 className={styles.formH1}>Ingresa tu e-mail para iniciar sesión</h2>
 
         <label className="block mt-2 ml-2 text-black font-medium">E-mail</label>
         <input

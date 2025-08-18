@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { styles } from '../../styles/styleClasses';
 
 export default function LoginLogo() {
     const { user, logout } = useContext(AuthContext);
@@ -25,7 +26,7 @@ export default function LoginLogo() {
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link 
                         href="/profile" 
-                        className="block text-center px-4 py-2 text-sm hover:bg-yellow-400 rounded-lg transition-all duration-300 font-medium"
+                        className={`${styles.btnLoginNav} hover:bg-yellow-400 rounded-lg transition-all duration-300 font-medium`}
                     >
                         👤 Mi Perfil
                     </Link>
@@ -35,7 +36,7 @@ export default function LoginLogo() {
                             setShowDropdown(false);
                             router.push("/");
                         }}
-                        className="block w-full px-4 py-2 text-sm hover:bg-red-400 rounded-lg transition-all duration-300 font-medium"
+                        className={`${styles.btnLoginNav} w-full hover:bg-red-400 rounded-lg transition-all duration-300 font-medium cursor-pointer`}
                     >
                         Cerrar Sesión
                     </button>

@@ -2,6 +2,7 @@
 import {AuthContext} from '../../context/AuthContext';
 import axios  from 'axios';
 import { useContext, useState, useEffect } from 'react';
+import{ styles } from '../../styles/styleClasses';
 
 export default function Profile() {
     const { user, profile, isLoadingProfile, refreshProfile } = useContext(AuthContext);
@@ -155,35 +156,35 @@ export default function Profile() {
     return (
         <section className="flex justify-center items-center ">
             <div className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]">
-            <h1 className="text-3xl font-bold mb-4">Mi Perfil</h1>
+            <h1 className={`${styles.formH1}`}>Mi Perfil</h1>
             {/* Tabs */}
                 <div className="flex mb-6 border-b">
                     <button 
-                        className={`py-2 px-4 ${activeTab === 'profile' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'profile' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('profile')}
                     >
                         Perfil
                     </button>
                     <button 
-                        className={`py-2 px-4 ${activeTab === 'address' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'address' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('address')}
                     >
                         Dirección
                     </button>
                     <button 
-                        className={`py-2 px-4 ${activeTab === 'password' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'password' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('password')}
                     >
                         Contraseña
                     </button>
                     <button 
-                        className={`py-2 px-4 ${activeTab === 'email' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'email' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('email')}
                     >
                         Email
                     </button>
                     <button 
-                        className={`py-2 px-4 ${activeTab === 'phone' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'phone' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('phone')}
                     >
                         Teléfono
@@ -224,7 +225,7 @@ export default function Profile() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50"
+                            className={`${styles.btnProfile}`}
                         >
                             {isSubmitting ? 'Actualizando...' : 'Actualizar Dirección'}
                         </button>
@@ -268,7 +269,7 @@ export default function Profile() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50"
+                            className={styles.btnProfile}
                         >
                             {isSubmitting ? 'Actualizando...' : 'Cambiar Contraseña'}
                         </button>
@@ -290,7 +291,7 @@ export default function Profile() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50"
+                            className={`${styles.btnProfile}`}
                         >
                             {isSubmitting ? 'Actualizando...' : 'Cambiar Email'}
                         </button>
@@ -313,11 +314,10 @@ export default function Profile() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50"
+                            className={`${styles.btnProfile}`}
                         >
                             {isSubmitting ? 'Actualizando...' : 'Cambiar Teléfono'}
                         </button>
-                        
                     </form>
                 )}
             </div>

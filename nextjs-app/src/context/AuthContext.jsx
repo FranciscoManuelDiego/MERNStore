@@ -48,12 +48,15 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Login failed');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Login failed');
             }
 
             const data = await response.json();
             if (data.user) {
                 setUser(data.user);
+                // Set cookie for middleware
+                document.cookie = `auth-token=${data.token}; path=/; httpOnly; secure; sameSite=strict`;
             }
             return data;
         } catch (error) {
