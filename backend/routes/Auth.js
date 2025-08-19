@@ -268,4 +268,26 @@ router.delete("/profile", async (req, res) => {
     }
 });
 
+// Validate session endpoint
+router.get("/validate", async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ message: "No token provided" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+        
+        if (!user) {
+            return res.status(401).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ valid: true, userId: user._id });
+    } catch (error) {
+        console.error("Session validation error:", error);
+        res.status(401).json({ valid: false, message: "Invalid session" });
+    }
+});
+
 module.exports = router;

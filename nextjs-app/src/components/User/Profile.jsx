@@ -36,27 +36,29 @@ export default function Profile() {
         console.log("Attempting to update address with:", addressForm);
         
         try {
-            const response = await axios.put(
-                "http://localhost:3000/api/auth/profile/address",
-                { address: addressForm.address },
-                { withCredentials: true }
-            );
+            const response = await fetch("/api/auth/profile/address", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({ address: addressForm.address })
+            });
             
-            // Log the response
-            console.log("Address update response:", response);
+            const data = await response.json();
             
-            if (response.status === 200) {
-                setMessage({ type: 'success', text: 'Dirección actualizada correctamente' });
+            if (response.ok) {
+                setMessage({ type: 'success', text: data.message || 'Dirección actualizada correctamente' });
                 console.log("Refreshing profile...");
                 await refreshProfile();
             } else {
-                setMessage({ type: 'error', text: response.data.message || 'Error al actualizar dirección' });
+                setMessage({ type: 'error', text: data.error || 'Error al actualizar la dirección' });
             }
         } catch (error) {
-            console.error("Address update error:", error.response || error);
+            console.error("Address update error:", error);
             setMessage({ 
                 type: 'error', 
-                text: error.response?.data?.message || 'Error al actualizar dirección'
+                text: 'Error al actualizar dirección'
             });
         } finally {
             setIsSubmitting(false);
@@ -130,23 +132,28 @@ export default function Profile() {
         setMessage({ type: '', text: '' });
         
         try {
-            const response = await axios.put(
-                "http://localhost:3000/api/auth/profile/phone",
-                { phone: phoneForm.phone },
-                { withCredentials: true }
-            );
+            const response = await fetch("/api/auth/profile/phone", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify({ phone: phoneForm.phone })
+            });
             
-            if (response.status === 200) {
-                setMessage({ type: 'success', text: 'Teléfono actualizado correctamente' });
-                refreshProfile();
+            const data = await response.json();
+            
+            if (response.ok) {
+                setMessage({ type: 'success', text: data.message || 'Teléfono actualizado correctamente' });
+                await refreshProfile();
             } else {
-                setMessage({ type: 'error', text: response.data.message || 'Error al actualizar teléfono' });
+                setMessage({ type: 'error', text: data.error || 'Error al actualizar teléfono' });
             }
         } catch (error) {
             console.error("Phone update error:", error);
             setMessage({ 
                 type: 'error', 
-                text: error.response?.data?.message || 'Error de conexión'
+                text: 'Error de conexión'
             });
         } finally {
             setIsSubmitting(false);
@@ -202,10 +209,10 @@ export default function Profile() {
                        <p>Cargando...</p>
                     ) : profile ? (
                         <div className="bg-white shadow-lg rounded-lg p-6">
-                            <h2 className="text-2xl font-semibold mb-2">{profile.firstName} {profile.surname}</h2>
-                            <p className="mb-2">Email: {profile.email}</p>
-                            <p className="mb-2">Dirección: {profile.address || 'No registrada'}</p>
-                            <p className="mb-2">Teléfono: {profile.phone || 'No registrado'}</p>
+                            <h2 className={styles.profileTexting}>{profile.firstName} {profile.surname}</h2>
+                            <p className={styles.profileTexting}>Email: {profile.email}</p>
+                            <p className={styles.profileTexting}>Dirección: {profile.address || 'No registrada'}</p>
+                            <p className={styles.profileTexting}>Teléfono: {profile.phone || 'No registrado'}</p>
                         </div>
                     ) :  <p>Cargando...</p>
                 )}

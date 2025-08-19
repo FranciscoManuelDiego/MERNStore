@@ -38,7 +38,10 @@ export const styles = {
   cardTitle: "text-xl font-bold text-gray-800 mb-2",
   
   cardText: "text-gray-600 text-sm",
-  
+
+  //Profile styles
+  profileTexting: "text-black text-md font-medium mb-2",
+
   // Form styles
   formInput: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent",
   

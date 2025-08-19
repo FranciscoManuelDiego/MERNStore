@@ -9,18 +9,72 @@ export const AuthProvider = ({ children }) => {
 
     // Initialize user from localStorage on client-side only
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const savedUser = localStorage.getItem("user");
-            if (savedUser) {
-                try {
-                    setUser(JSON.parse(savedUser));
-                } catch (error) {
-                    console.error('Error parsing saved user:', error);
-                    localStorage.removeItem("user");
+        const validateSession = async () => {
+            try {
+                const response = await fetch('/api/auth/validate', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                return response.ok;
+            } catch (error) {
+                console.error('Error validating session:', error);
+                return false;
+            }
+        };
+
+        const fetchProfileData = async () => {
+            setIsLoadingProfile(true);
+            try {
+                const response = await fetch('/api/auth/profile', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setProfile(data);
+                    return true;
+                } else {
+                    setProfile(null);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                setProfile(null);
+                return false;
+            } finally {
+                setIsLoadingProfile(false);
+            }
+        };
+
+        const initializeAuth = async () => {
+            if (typeof window !== 'undefined') {
+                const savedUser = localStorage.getItem("user");
+                if (savedUser) {
+                    try {
+                        const parsedUser = JSON.parse(savedUser);
+                        
+                        // Validate the session with the server
+                        const isValid = await validateSession();
+                        if (isValid) {
+                            setUser(parsedUser);
+                            // Fetch fresh profile data
+                            await fetchProfileData();
+                        } else {
+                            // Clear invalid session
+                            localStorage.removeItem("user");
+                            setUser(null);
+                        }
+                    } catch (error) {
+                        console.error('Error parsing saved user:', error);
+                        localStorage.removeItem("user");
+                        setUser(null);
+                    }
                 }
             }
-        }
-        setIsInitialized(true);
+            setIsInitialized(true);
+        };
+        
+        initializeAuth();
     }, []);
 
     const [profile, setProfile] = useState(null);
@@ -38,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 
      const login = async (credentials) => {
         try {
-            const response = await fetch("http://localhost:3000/api/auth/login", {
+            const response = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -47,16 +101,14 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(credentials)
             });
 
+            const data = await response.json();
+            
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Login failed');
+                throw new Error(data.error || 'Login failed');
             }
 
-            const data = await response.json();
             if (data.user) {
                 setUser(data.user);
-                // Set cookie for middleware
-                document.cookie = `auth-token=${data.token}; path=/; httpOnly; secure; sameSite=strict`;
             }
             return data;
         } catch (error) {
@@ -90,9 +142,15 @@ export const AuthProvider = ({ children }) => {
             if (response.ok) {
                 const data = await response.json();
                 setProfile(data);
+                return true;
+            } else {
+                setProfile(null);
+                return false;
             }
         } catch (error) {
             console.error('Error fetching profile:', error);
+            setProfile(null);
+            return false;
         } finally {
             setIsLoadingProfile(false);
         }
