@@ -1,23 +1,15 @@
 "use client";
-import { useContext } from "react";
-// import { useCartContext } from "../context/CartProvider";
-import { useEffect, useState } from "react";
+import { useCartCalculations } from "../hooks/useCart";
+import { FaShoppingCart } from "react-icons/fa";
 
-import { CartContext } from "../context/CartContext";
 const CartWidget = () => {
-    const {cart} = useContext(CartContext)
-    const [total, setTotal] = useState()
-
-    useEffect(() => {
-        setTotal(cart?.reduce((previo, actual) => {
-            return previo + actual.cantidad
-        }, 0))
-    }, [cart])
+    const { itemCount } = useCartCalculations();
 
     return (
-    <>
-    <span>{total}</span>
-    </> 
+    <div className="flex items-center space-x-2">
+        <FaShoppingCart />
+        <span>{itemCount}</span>
+    </div> 
     );
 }
 

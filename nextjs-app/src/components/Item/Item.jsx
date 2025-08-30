@@ -1,4 +1,5 @@
-
+import { styles } from "../../styles/styleClasses"
+import Link from "next/link";
 
 
 const Item = ({ SingleProduct }) => {
@@ -13,7 +14,9 @@ const Item = ({ SingleProduct }) => {
             <p className="text-gray-700 font-semibold">Precio: <span className="text-green-700">{SingleProduct.price} AR$</span></p>
             <p className="text-gray-600">Stock: {SingleProduct.stock}</p>
             <p className="text-gray-500 text-sm mb-3 text-center">{SingleProduct.description}</p>
-            <button className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 rounded transition-colors duration-200">Ver Más</button>
+            <Link href={`/products/${SingleProduct._id}`}>
+                <button className={`${styles.btnPrimary}`}>Ver Más</button>
+            </Link>
         </li>
     );
 }

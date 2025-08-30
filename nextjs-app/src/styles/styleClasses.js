@@ -5,10 +5,10 @@ export const styles = {
 
   formH1:"text-black text-2xl font-bold mb-6",
 
-  subtitleProfile:"text-black text-md font-medium mb-2",
+  subtitleProfile:"text-black text-md font-medium mb-2 cursor-pointer",
 
   // Button styles
-  btnPrimary: "bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105",
+  btnPrimary: "bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer",
   
   btnNav: "text-black px-4 py-2 font-medium cursor-pointer ",
 
@@ -42,6 +42,8 @@ export const styles = {
   //Profile styles
   profileTexting: "text-black text-md font-medium mb-2",
 
+  inputProfile: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-amber-500 text-black focus:ring-2 focus:ring-yellow-500",
+
   // Form styles
   formInput: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent",
   
@@ -55,7 +57,10 @@ export const styles = {
   textPrimary: "text-yellow-600",
   
   textSecondary: "text-gray-600",
-  
+
+  //Profile styles
+  inputProfile: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500",
+
   // Product styles
   productCard: "bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105",
   
@@ -64,13 +69,24 @@ export const styles = {
   productTitle: "text-lg font-semibold text-gray-800 mb-2",
   
   productPrice: "text-xl font-bold text-yellow-600",
+
+  //ItemDetail
+  productDetailContainer: "bg-white rounded-lg shadow-md p-6",
+
+  productDetailTitle: "text-2xl font-bold text-gray-800 mb-4",
+
+  productDetailDescription: "text-gray-600 mb-4",
   
+  productDetailPrice: "text-xl font-bold text-yellow-600 mb-4",
+
   // Container styles
   pageContainer: "container mx-auto px-4 py-8",
   
   sectionTitle: "text-3xl font-bold text-gray-800 mb-8 text-center",
 
   cartContainer: "container bg-white shadow-lg rounded-lg p-6 text-center sm:w-[300px] md:w-[400px] mx-auto mt-5",
+
+  profileRegisterContainer: "bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]",
 
   // Grid layouts
   productGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",

@@ -24,23 +24,16 @@ export const useLogin = () => {
   const { login } = useAuth();
   const router = useRouter();
 
-  const loginUser = async (email: string, password: string) => {
+  const loginUser = async (credentials: { email: string; password: string }) => {
     setIsLoading(true);
     setError(null);
     
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
-        email,
-        password
-      }, { withCredentials: true });
-      
-      if (response.data.user) {
-        login(response.data.user);
-        router.push('/');
-        return true;
-      }
+      await login(credentials);
+      router.push('/');
+      return true;
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Error al iniciar sesión');
+      setError(err.message || 'Error al iniciar sesión');
       return false;
     } finally {
       setIsLoading(false);

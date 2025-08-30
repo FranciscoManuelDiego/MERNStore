@@ -1,14 +1,15 @@
 "use client";
-import { useState, useContext  } from 'react';
-import { AuthContext } from '../../context/AuthContext'; // Adjust the path as needed
+import { useState } from 'react';
 import Link from 'next/link'; // Use Link from next/link for Next.js navigation
 import LoginLogo from './LoginLogo';
 import { styles } from '../../styles/styleClasses';
+import { useAuth } from '../../hooks/useAuth';
+import CartWidget from '../CartWidget';
 
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
-    const {user} = useContext(AuthContext);
+    const { user } = useAuth();
 
     return (
         <nav className="bg-white to-yellow-600 shadow-lg border-b-4 border-yellow-400">
@@ -57,7 +58,7 @@ export default function Navbar() {
                                     href="/cart" 
                                     className={styles.btnPrimary}
                                 >
-                                    <span>Carrito</span>
+                                    <CartWidget />
                                 </Link>
                             </>
                         ) : (
@@ -78,7 +79,7 @@ export default function Navbar() {
                                     href="/cart" 
                                     className={styles.btnPrimary}
                                 >
-                                    <span>Carrito</span>
+                                    <CartWidget />
                                 </Link>
                             </>
                         )}
@@ -116,8 +117,7 @@ export default function Navbar() {
                                     href="/cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
-
-                                    <span>Carrito</span>
+                                    <CartWidget />
                                 </Link>
                             </>
                         ) : (

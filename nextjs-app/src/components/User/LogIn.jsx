@@ -1,12 +1,11 @@
 "use client";
 import { useState, useRef} from "react";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext"; // Adjust the path as needed
 import { useRouter } from "next/navigation"; // Import useRouter for redirection
 import { styles } from "../../styles/styleClasses";
+import { useLogin } from "../../hooks/useAuth";
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  const { loginUser } = useLogin();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -31,7 +30,7 @@ export default function Login() {
     } 
     try {
         console.log('Attempting login with:', form.email); // Debug log
-        await login({
+        await loginUser({
           email: form.email,
           password: form.password
         });
@@ -51,7 +50,7 @@ export default function Login() {
   return (
     <div className="flex justify-center items-center ">
       <form ref={formRef} className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]" onSubmit={handleSubmit}>
-        <h2 className={styles.formH1}>Ingresa tu e-mail para iniciar sesión</h2>
+        <h2 className={`${styles.formH1} mt-4`}>Ingresa tu e-mail para iniciar sesión</h2>
 
         <label className="block mt-2 ml-2 text-black font-medium">E-mail</label>
         <input
@@ -83,7 +82,7 @@ export default function Login() {
 
         <button
           type="submit"
-          className="bg-yellow-400 block py-2 px-5 mt-4 outline-none w-fit text-black font-bold shadow-md shadow-primary rounded-xl hover:bg-yellow-300 transition-colors duration-200"
+          className={`${styles.btnPrimary} mt-5`}
         >
           Continuar
         </button>

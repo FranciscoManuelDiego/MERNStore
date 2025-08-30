@@ -1,12 +1,12 @@
 "use client";
-import { AuthContext } from "../../context/AuthContext";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { styles } from '../../styles/styleClasses';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function LoginLogo() {
-    const { user, logout } = useContext(AuthContext);
+    const { user, logout } = useAuth();
     const [showDropdown, setShowDropdown] = useState(false);
     const router = useRouter();
 

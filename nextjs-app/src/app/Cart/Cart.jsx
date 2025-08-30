@@ -1,26 +1,16 @@
 "use client"
-import { useContext, useState, useEffect } from 'react';
-import {styles} from '../../styles/styleClasses';
-import { CartContext } from '../../context/CartContext';
+import { useState } from 'react';
+import { styles } from '../../styles/styleClasses';
 import Link from 'next/link';
-import { AuthContext } from '../../context/AuthContext';
-import axios from 'axios';
+import { useAuth } from '../../hooks/useAuth';
+import { useCart, useCartCalculations } from '../../hooks/useCart';
 
 const Cart = () => {
-    const [precioTotal, setPrecioTotal] = useState(0);
-    const { cart, removeProduct, cleanCart } = useContext(CartContext);
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
+    const { cart, removeProduct, cleanCart } = useCart();
+    const { totalPrice, itemCount } = useCartCalculations();
     const [isProcessing, setIsProcessing] = useState(false);
     const [orderComplete, setOrderComplete] = useState(false);
-
-    // Calculate total price whenever cart changes
-    useEffect(() => {
-        setPrecioTotal(
-            cart.reduce((previo, actual) => {
-                return previo + actual.precio * actual.cantidad;
-            }, 0)
-        );
-    }, [cart]);
 
     // Function to handle removing a product
     const handleRemoveProduct = (productId) => {
@@ -45,14 +35,17 @@ const Cart = () => {
                     quantity: item.cantidad,
                     price: item.precio
                 })),
-                total: precioTotal
+                total: totalPrice
             };
             
-            const response = await axios.post(
-                'http://localhost:3000/api/orders', 
-                orderData,
-                { withCredentials: true }
-            );
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+                credentials: 'include'
+            });
             
             if (response.status === 201) {
                 cleanCart();
@@ -71,7 +64,7 @@ const Cart = () => {
         return (
             <div className={styles.cartContainer}>
                 <h1 className="text-2xl font-bold text-green-600 mb-4">¡Pedido Completado!</h1>
-                <p className="mb-4">Tu pedido ha sido procesado correctamente.</p>
+                <p className={`${styles.cartH1} mt-4 `}>Tu pedido ha sido procesado correctamente.</p>
                 <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                     Seguir Comprando
                 </Link>
@@ -95,7 +88,7 @@ const Cart = () => {
         return (
             <div className={styles.cartContainer}>
                 <h1 className={styles.cartH1}>No hay productos en tu carrito 😬</h1>
-                <p className="mb-4">Agrega productos y serán aquí mostrados!</p>
+                <p className={`${styles.cartH1} mt-4 `}>Agrega productos y serán aquí mostrados!</p>
                 <Link href="/" className={styles.btnPrimary}>
                     Ver Productos
                 </Link>
@@ -151,11 +144,11 @@ const Cart = () => {
             <div className="bg-white rounded-lg shadow-md p-6 md:w-1/2 ml-auto">
                 <div className="flex justify-between mb-4">
                     <span className="font-semibold">Subtotal:</span>
-                    <span>${precioTotal}</span>
+                    <span>${totalPrice}</span>
                 </div>
                 <div className="flex justify-between mb-4 text-xl font-bold">
                     <span>Total:</span>
-                    <span>${precioTotal}</span>
+                    <span>${totalPrice}</span>
                 </div>
                 
                 <div className="flex flex-col gap-3 mt-6">

@@ -106,3 +106,39 @@ export const useCategories = () => {
 
   return categories;
 };
+
+// Hook for fetching a single product
+export const useSingleProduct = (productId: string) => {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!productId) return;
+      
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const response = await fetch(`/api/products/${productId}`);
+        
+        if (!response.ok) {
+          throw new Error('Product not found');
+        }
+        
+        const data = await response.json();
+        setProduct(data.product);
+      } catch (err: any) {
+        setError(err.message || 'Error fetching product');
+        setProduct(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  return { product, isLoading, error };
+};

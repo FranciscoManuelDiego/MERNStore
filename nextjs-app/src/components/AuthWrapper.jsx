@@ -1,10 +1,9 @@
 "use client";
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import AuthLoading from './AuthLoading';
 
 export default function AuthWrapper({ children }) {
-    const { isInitialized } = useContext(AuthContext);
+    const { isInitialized } = useAuth();
     
     if (!isInitialized) {
         return <AuthLoading />;

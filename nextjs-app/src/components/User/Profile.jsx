@@ -1,12 +1,16 @@
 "use client"
-import {AuthContext} from '../../context/AuthContext';
 import axios  from 'axios';
-import { useContext, useState, useEffect } from 'react';
-import{ styles } from '../../styles/styleClasses';
+import { useState, useEffect } from 'react';
+import { styles } from '../../styles/styleClasses';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Profile() {
-    const { user, profile, isLoadingProfile, refreshProfile } = useContext(AuthContext);
+    const { user, profile, isLoadingProfile, refreshProfile } = useAuth();
     const [activeTab, setActiveTab] = useState('profile');
+
+    // Debug: Check if styles are imported correctly
+    console.log('Styles object:', styles);
+    console.log('inputProfile class:', styles.inputProfile);
 
     useEffect(() => {
         if (profile) {
@@ -36,7 +40,7 @@ export default function Profile() {
         console.log("Attempting to update address with:", addressForm);
         
         try {
-            const response = await fetch("/api/auth/profile/address", {
+            const response = await fetch("http://localhost:3000/api/auth/profile/address", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -162,36 +166,36 @@ export default function Profile() {
 
     return (
         <section className="flex justify-center items-center ">
-            <div className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]">
+            <div className="bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[400px]">
             <h1 className={`${styles.formH1}`}>Mi Perfil</h1>
             {/* Tabs */}
-                <div className="flex mb-6 border-b">
+                <div className="flex flex-wrap mb-6 border-b gap-2">
                     <button 
-                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'profile' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-2 sm:px-4 text-sm sm:text-base ${activeTab === 'profile' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('profile')}
                     >
                         Perfil
                     </button>
                     <button 
-                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'address' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-2 sm:px-4 text-sm sm:text-base ${activeTab === 'address' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('address')}
                     >
                         Dirección
                     </button>
                     <button 
-                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'password' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-2 sm:px-4 text-sm sm:text-base ${activeTab === 'password' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('password')}
                     >
                         Contraseña
                     </button>
                     <button 
-                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'email' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-2 sm:px-4 text-sm sm:text-base ${activeTab === 'email' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('email')}
                     >
                         Email
                     </button>
                     <button 
-                        className={`${styles.subtitleProfile} py-2 px-4 ${activeTab === 'phone' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
+                        className={`${styles.subtitleProfile} py-2 px-2 sm:px-4 text-sm sm:text-base ${activeTab === 'phone' ? 'border-b-2 border-yellow-500 font-semibold' : ''}`}
                         onClick={() => setActiveTab('phone')}
                     >
                         Teléfono
@@ -225,7 +229,8 @@ export default function Profile() {
                                 type="text"
                                 value={addressForm.address}
                                 onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="Ingresa tu dirección completa"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                             />
                         </div>
@@ -247,7 +252,8 @@ export default function Profile() {
                                 type="password"
                                 value={passwordForm.currentPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="Ingresa tu contraseña actual"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                             />
                         </div>
@@ -257,7 +263,8 @@ export default function Profile() {
                                 type="password"
                                 value={passwordForm.newPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="Ingresa tu nueva contraseña (mínimo 6 caracteres)"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                                 minLength="6"
                             />
@@ -268,7 +275,8 @@ export default function Profile() {
                                 type="password"
                                 value={passwordForm.confirmPassword}
                                 onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="Confirma tu nueva contraseña"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                                 minLength="6"
                             />
@@ -291,7 +299,8 @@ export default function Profile() {
                                 type="email"
                                 value={emailForm.email}
                                 onChange={(e) => setEmailForm({ ...emailForm, email: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="ejemplo@email.com"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                             />
                         </div>
@@ -314,7 +323,8 @@ export default function Profile() {
                                 type="text"
                                 value={phoneForm.phone}
                                 onChange={(e) => setPhoneForm({ ...phoneForm, phone: e.target.value })}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                placeholder="+54 11 1234-5678"
+                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
                                 required
                             />
                         </div>

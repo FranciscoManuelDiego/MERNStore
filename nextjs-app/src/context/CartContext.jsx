@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useState, useEffect } from 'react';
+import { safeLocalStorage } from '../utils/localStorage';
 
 export const CartContext = createContext();
 
@@ -9,17 +10,15 @@ const CartProvider = ({ children }) => {
 
     // Initialize cart from localStorage on client-side only
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const savedCart = localStorage.getItem("cart");
-            if (savedCart) {
-                try {
-                    const parsedCart = JSON.parse(savedCart);
-                    setCart(Array.isArray(parsedCart) ? parsedCart : []);
-                } catch (error) {
-                    console.error('Error parsing saved cart:', error);
-                    localStorage.removeItem("cart");
-                    setCart([]);
-                }
+        const savedCart = safeLocalStorage.getItem("cart");
+        if (savedCart) {
+            try {
+                const parsedCart = JSON.parse(savedCart);
+                setCart(Array.isArray(parsedCart) ? parsedCart : []);
+            } catch (error) {
+                console.error('Error parsing saved cart:', error);
+                safeLocalStorage.removeItem("cart");
+                setCart([]);
             }
         }
         setIsInitialized(true);
@@ -27,42 +26,25 @@ const CartProvider = ({ children }) => {
     
     // Save to localStorage whenever cart changes (only after initialization)
     useEffect(() => {
-        if (typeof window !== 'undefined' && isInitialized) {
-            localStorage.setItem("cart", JSON.stringify(cart));
+        if (isInitialized) {
+            safeLocalStorage.setItem("cart", JSON.stringify(cart));
         }
     }, [cart, isInitialized]);
 
-    const getCart = async (credentials) => {
-        try {
-            const response = await axios.get("http://localhost:3000/api/cart", {
-                withCredentials: true,
-            });
-            setCart(response.data);
-        } catch (error) {
-            console.error("Error fetching cart:", error);
-        }
+    const getCart = async () => {
+        // For localStorage-based cart, just return current cart
+        return cart;
     }
 
     const addItem = async (product, quantity) => {
         try {
-            // API version
-            const response = await axios.post("http://localhost:3000/api/cart", {
-                item: product.id,
-                quantity: quantity
-            }, {
-                withCredentials: true
-            });
-            setCart(response.data);
-        } catch (error) {
-            console.error("Error adding item to cart:", error);
-            
-            // Fallback to local version if API fails
+            // Local cart management (no need for API calls)
             const newProduct = {
                 id: product.id,
-                name: product.marca,
-                img: product.img,
+                name: product.marca || product.name,
+                img: product.img || product.imageUrl,
                 category: product.category,
-                price: product.precio,
+                price: product.precio || product.price,
                 quantity: quantity,
             };
 
@@ -80,6 +62,8 @@ const CartProvider = ({ children }) => {
                 // Add new product if it doesn't exist
                 setCart([...cart, newProduct]);
             }
+        } catch (error) {
+            console.error("Error adding item to cart:", error);
         }
     };
         

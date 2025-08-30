@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const validateSession = async () => {
             try {
-                const response = await fetch('/api/auth/validate', {
+                const response = await fetch('http://localhost:3000/api/auth/validate', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         const fetchProfileData = async () => {
             setIsLoadingProfile(true);
             try {
-                const response = await fetch('/api/auth/profile', {
+                const response = await fetch('http://localhost:3000/api/auth/profile', {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -125,7 +125,11 @@ export const AuthProvider = ({ children }) => {
             });
             if (response.ok) {
                 setUser(null);
-
+                setProfile(null);
+                // Clear localStorage on logout
+                if (typeof window !== 'undefined') {
+                    localStorage.removeItem("user");
+                }
             }
         } catch (error) {
             console.error('Error during logout:', error);
@@ -135,7 +139,7 @@ export const AuthProvider = ({ children }) => {
     const fetchProfileData = async () => {
         setIsLoadingProfile(true);
         try {
-            const response = await fetch('http://localhost:3000/api/auth/profile', {
+            const response = await fetch('/api/auth/profile', {
                 method: 'GET',
                 credentials: 'include',
             });
