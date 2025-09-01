@@ -88,6 +88,10 @@ export const styles = {
 
   profileRegisterContainer: "bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]",
 
+  //Carrousel styles
+  carouselContainer: "relative max-w-[1200px] mx-auto",
+  carouselImage: "relative xl:h-[600px] xl:w-[1200px] md:h-[500px] md:w-[800px] sm:h-[300px] sm:w-[600px]",
+
   // Grid layouts
   productGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
   
