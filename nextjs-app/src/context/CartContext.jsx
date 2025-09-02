@@ -73,7 +73,8 @@ const CartProvider = ({ children }) => {
 
     const removeProduct = (id) => setCart(cart.filter(product => product.id !== id))
 
-return <CartContext.Provider value={{
+return (
+<CartContext.Provider value={{
     cart, 
     getCart,
     addItem, 
@@ -82,6 +83,7 @@ return <CartContext.Provider value={{
         {children}
     </CartContext.Provider>
 // Esta prop children lo que hace es enviar la app como un children para que se conozca el contexto y su info. en la App
+);
 }
 
 export default CartProvider
