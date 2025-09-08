@@ -11,7 +11,7 @@ const Item = ({ SingleProduct }) => {
                 alt={SingleProduct.name} 
                 className="w-32 h-32 object-contain mb-2 rounded"
             />
-            <p className="text-gray-700 font-semibold">Precio: <span className="text-green-700">{SingleProduct.price} AR$</span></p>
+            <p className="text-gray-700 font-semibold">Precio: <span className="text-gray-800">{SingleProduct.price} AR$</span></p>
             <p className="text-gray-600">Stock: {SingleProduct.stock}</p>
             <p className="text-gray-500 text-sm mb-3 text-center">{SingleProduct.description}</p>
             <Link href={`/products/${SingleProduct._id}`}>

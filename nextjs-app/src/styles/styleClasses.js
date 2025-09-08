@@ -77,7 +77,7 @@ export const styles = {
 
   productDetailDescription: "text-gray-600 mb-4 my-2",
   
-  productDetailPrice: "text-xl font-bold text-yellow-600 mb-4 my-2",
+  productDetailPrice: "text-xl font-bold text-gray-800 mb-4 my-2",
 
   itemCountButton: "bg-blue-500 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded cursor-pointer",
 
@@ -97,7 +97,11 @@ export const styles = {
   // Grid layouts
   productGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",
   
-  categoryGrid: "grid grid-cols-1 md:grid-cols-2 gap-6"
+  categoryGrid: "grid grid-cols-1 md:grid-cols-2 gap-6",
+
+  //Cart styles
+
+  textCart: "text-gray-700"
 };
 
 // Color palette

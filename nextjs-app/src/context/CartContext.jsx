@@ -38,9 +38,14 @@ const CartProvider = ({ children }) => {
 
     const addItem = async (product, quantity) => {
         try {
+           // console.log('CartContext addItem called with:');
+           // console.log('Product:', product);
+           // console.log('Quantity:', quantity);
+           // console.log('Current cart:', cart);
+
             // Local cart management (no need for API calls)
             const newProduct = {
-                id: product.id,
+                id: product.id || product._id,
                 name: product.marca || product.name,
                 img: product.img || product.imageUrl,
                 category: product.category,
@@ -48,17 +53,22 @@ const CartProvider = ({ children }) => {
                 quantity: quantity,
             };
 
-            // Check if product already exists in cart
-            const existingProduct = cart.find(item => item.id === product.id);
+            console.log('New product object:', newProduct);
+
+            // Check if product already exists in cart using the same ID logic
+            const existingProduct = cart.find(item => item.id === newProduct.id);
+            console.log('Existing product found:', existingProduct);
             
             if (existingProduct) {
+                console.log('Updating existing product quantity');
                 // Update quantity if product exists
                 setCart(cart.map(item => 
-                    item.id === product.id 
+                    item.id === newProduct.id 
                         ? {...item, quantity: item.quantity + quantity}
                         : item
                 ));
             } else {
+                console.log('Adding new product to cart');
                 // Add new product if it doesn't exist
                 setCart([...cart, newProduct]);
             }

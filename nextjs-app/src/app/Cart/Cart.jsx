@@ -8,7 +8,7 @@ import { useCart, useCartCalculations } from '../../hooks/useCart';
 const Cart = () => {
     const { user } = useAuth();
     const { cart, removeProduct, cleanCart } = useCart();
-    const { totalPrice, itemCount } = useCartCalculations();
+    const { totalPrice, totalItems} = useCartCalculations();
     const [isProcessing, setIsProcessing] = useState(false);
     const [orderComplete, setOrderComplete] = useState(false);
 
@@ -98,9 +98,11 @@ const Cart = () => {
 
     // Show cart with items
     return (
-        <div className={styles.pageContainer}>
-            <h1 className={styles.cartH1}>Tu Carrito de Compras</h1>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden mb-6">
+        <section className="flex space-x-4 p-4">
+            {/* Left side - Cart items */}
+            <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden">
+                <h1 className={`${styles.cartH1} p-4`}>Tu Carrito de Compras</h1>
+                
                 {/* Cart header */}
                 <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-600">
                     <div className="col-span-6">Producto</div>
@@ -111,21 +113,21 @@ const Cart = () => {
                 
                 {/* Cart items */}
                 {cart.map((producto) => (
-                    <div key={producto.id} className="grid grid-cols-12 p-4 items-center border-b">
+                    <div key={producto.id} className={`grid grid-cols-12 p-4 items-center border-b ${styles.textCart}`}>
                         <div className="col-span-6 flex items-center">
                             <img 
                                 src={producto.img} 
-                                alt={producto.nombre} 
-                                className="w-16 h-16 object-cover rounded mr-4"
+                                alt={producto.name} 
+                                className="w-32 h-32 object-contain rounded mr-4"
                             />
                             <div>
-                                <h3 className="font-semibold">{producto.nombre}</h3>
-                                <p className="text-sm text-gray-600">{producto.categoria}</p>
+                                <h3 className="font-semibold">{producto.name}</h3>
+                                <p className="text-sm text-gray-600">{producto.category}</p>
                             </div>
                         </div>
-                        <div className="col-span-2 text-center">${producto.precio}</div>
-                        <div className="col-span-2 text-center">{producto.cantidad}</div>
-                        <div className="col-span-1 text-center">${producto.cantidad * producto.precio}</div>
+                        <div className="col-span-2 text-center">${producto.price || 0}</div>
+                        <div className="col-span-2 text-center">{producto.quantity || 0}</div>
+                        <div className="col-span-1 text-center">${(producto.quantity || 0) * (producto.price || 0)}</div>
                         <div className="col-span-1 text-center">
                             <button 
                                 onClick={() => handleRemoveProduct(producto.id)}
@@ -140,15 +142,18 @@ const Cart = () => {
                 ))}
             </div>
             
-            {/* Cart summary */}
-            <div className="bg-white rounded-lg shadow-md p-6 md:w-1/2 ml-auto">
-                <div className="flex justify-between mb-4">
-                    <span className="font-semibold">Subtotal:</span>
-                    <span>${totalPrice}</span>
-                </div>
-                <div className="flex justify-between mb-4 text-xl font-bold">
-                    <span>Total:</span>
-                    <span>${totalPrice}</span>
+            {/* Right side - Cart summary */}
+            <div className="w-96 bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-bold mb-4 text-black">Resumen de la compra</h2>
+                <div className={`space-y-2 mb-4 ${styles.textCart}`}>
+                    <div className="flex justify-between">
+                        <span>Cantidad de productos:</span>
+                        <span className="font-semibold">{totalItems}</span>
+                    </div>
+                    <div className={`flex justify-between text-xl font-bold border-t pt-2 `}>
+                        <span>Total:</span>
+                        <span>${totalPrice}</span>
+                    </div>
                 </div>
                 
                 <div className="flex flex-col gap-3 mt-6">
@@ -170,21 +175,21 @@ const Cart = () => {
                     ) : (
                         <Link 
                             href="/login" 
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold text-center py-2 px-4 rounded-md transition duration-300"
+                            className={`bg-${styles.primary} hover:bg-${styles.seconday} text-white font-semibold text-center py-2 px-4 rounded-md transition duration-300 block`}
                         >
                             Iniciar Sesión para Comprar
                         </Link>
                     )}
                     
                     <Link 
-                        href="/products" 
-                        className="text-yellow-500 hover:text-yellow-700 text-center"
+                        href="/" 
+                        className="text-yellow-500 hover:text-yellow-700 text-center cursor"
                     >
                         Continuar Comprando
                     </Link>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

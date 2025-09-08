@@ -27,8 +27,8 @@ export const useCartCalculations = () => {
 
   useEffect(() => {
     const itemCount = cart.length;
-    const totalItems = cart.reduce((total: number, item: { cantidad: number }) => total + item.cantidad, 0);
-    const totalPrice = cart.reduce((total: number, item: { precio: number; cantidad: number }) => total + (item.precio * item.cantidad), 0);
+    const totalItems = cart.reduce((total: number, item: { quantity: number }) => total + (item.quantity || 0), 0);
+    const totalPrice = cart.reduce((total: number, item: { price: number; quantity: number }) => total + ((item.price || 0) * (item.quantity || 0)), 0);
 
     setTotals({
       itemCount,

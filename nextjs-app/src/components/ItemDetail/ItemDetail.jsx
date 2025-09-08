@@ -16,8 +16,9 @@ const ItemDetail = ({products}) => {
 
     const onAdd = (cantidad) => {
         //console.log('onAdd called with:', cantidad);
-        //console.log('user:', user);
-        //console.log('addItem function:', addItem);
+        //console.log('Product being added:', products);
+        //console.log('Product ID:', products?.id);
+        //console.log('Product _id:', products?._id);
 
         if (!user) {
             router.push('/login');
@@ -38,8 +39,6 @@ const ItemDetail = ({products}) => {
                 src={products.imageUrl}
                 alt={products.name}
                 className="xl:w-128 xl:h-128 md:w-64 md:h-64 sm:w-32 sm:h-32 object-contain mb-2 rounded"
-                zoomType="basic"
-                speed="normal"
             />
             <div>
                 <div className='justify-center items-center sm:flex-col sm:justify-start sm:items-start sm:text-left text-center'>
