@@ -1,9 +1,14 @@
 "use client"
 import { useState } from "react";
-import { styles } from "nextjsproject/styles/styleClasses";
+import { styles } from "../../styles/styleClasses";
 
 const ItemCount = ({ stock, inicio, addToCart }) => {
-    const [cantidad, setCantidad] = useState(inicio);
+    const [cantidad, setCantidad] = useState(inicio); // Initial quantity state from props
+
+    // Debug: Check if addToCart is actually a function
+    console.log('ItemCount props:', { stock, inicio, addToCart });
+    console.log('addToCart type:', typeof addToCart);
+    console.log('addToCart value:', addToCart);
 
     const incrementar = () => {
         if (cantidad < stock) {
@@ -18,11 +23,16 @@ const ItemCount = ({ stock, inicio, addToCart }) => {
     };
 
     const agregarAlCarrito = () => {
-        addToCart(cantidad);
+        console.log('agregarAlCarrito called, addToCart is:', typeof addToCart);
+        if (typeof addToCart === 'function') {
+            addToCart(cantidad);
+        } else {
+            console.error('addToCart is not a function:', addToCart);
+        }
     };
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col sm:items-start items-center">
             <div className="space-x-4 my-4">
                 <button
                     onClick={decrementar}

@@ -47,7 +47,7 @@ const ItemListContainer = () => {
         })
         : products;
 
-    console.log('Final filtered products:', filteredProducts); // Debug log
+    //console.log('Final filtered products:', filteredProducts); // Debug log
 
     if (loading) {
         return (

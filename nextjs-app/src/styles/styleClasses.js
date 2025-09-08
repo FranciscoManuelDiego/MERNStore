@@ -79,7 +79,7 @@ export const styles = {
   
   productDetailPrice: "text-xl font-bold text-yellow-600 mb-4 my-2",
 
-  itemCountButton: "bg-blue-600 hover:bg-blue-500 text-black font-bold py-2 px-4 rounded cursor-pointer",
+  itemCountButton: "bg-blue-500 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded cursor-pointer",
 
   // Container styles
   pageContainer: "container mx-auto px-4 py-8",
