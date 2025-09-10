@@ -55,7 +55,7 @@ export default function Navbar() {
                             <>
                                 <LoginLogo />
                                 <Link 
-                                    href="/cart" 
+                                    href="/Cart" 
                                     className={styles.btnPrimary}
                                 >
                                     <CartWidget />
@@ -76,7 +76,7 @@ export default function Navbar() {
                                     Registrarse
                                 </Link>
                                 <Link 
-                                    href="/cart" 
+                                    href="/Cart" 
                                     className={styles.btnPrimary}
                                 >
                                     <CartWidget />
@@ -114,7 +114,7 @@ export default function Navbar() {
                             <>
                                 <LoginLogo />
                                 <Link 
-                                    href="/cart" 
+                                    href="/Cart" 
                                     className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                                 >
                                     <CartWidget />
@@ -135,7 +135,7 @@ export default function Navbar() {
                                     Registrarse
                                 </Link>
                         <Link 
-                            href="/cart" 
+                            href="/Cart" 
                             className="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
                             onClick={() => setShowMenu(false)}
                         >

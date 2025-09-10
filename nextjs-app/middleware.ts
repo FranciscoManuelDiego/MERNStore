@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('auth-token')
+  const token = request.cookies.get('token')  // Changed from 'auth-token' to 'token'
   
   // Protect routes that require authentication
   if (request.nextUrl.pathname.startsWith('/profile') || 
@@ -16,8 +16,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/profile/:path*', '/cart/:path*']
+  matcher: ['/profile/:path*', '/cart/:path*'],
 }
-
 // Middleware in Next.js runs before a request is completed, allowing you to modify the response by rewriting, 
 // redirecting, modifying headers, or setting cookies.

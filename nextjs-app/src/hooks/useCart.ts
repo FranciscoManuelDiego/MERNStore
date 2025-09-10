@@ -57,10 +57,10 @@ export const useCheckout = () => {
       const orderData = {
         items: cart.map((item: any) => ({
           product: item.id,
-          quantity: item.cantidad,
-          price: item.precio
+          quantity: item.quantity,
+          price: item.price
         })),
-        total: cart.reduce((total: number, item: { precio: number; cantidad: number }) => total + (item.precio * item.cantidad), 0)
+        total: cart.reduce((total: number, item: { price: number; quantity: number }) => total + (item.price * item.quantity), 0)
       };
       
       const response = await axios.post(
