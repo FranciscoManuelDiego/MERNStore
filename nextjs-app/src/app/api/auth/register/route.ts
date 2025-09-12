@@ -18,29 +18,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Formato de email inválido' },
-        { status: 400 }
-      );
-    }
-
     // Password validation
     if (password.length < 6) {
       return NextResponse.json(
         { error: 'La contraseña debe tener al menos 6 caracteres' },
         { status: 400 }
-      );
-    }
-
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'El usuario ya existe con este email' },
-        { status: 409 }
       );
     }
 
@@ -77,11 +59,11 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
 
-  } catch (error: any) {
-    console.error('Registration error:', error);
+  } catch (error) {
+    console.error('Error:', error);
     
     // Handle MongoDB duplicate key error
-    if (error.code === 11000) {
+    if (error instanceof Error && error.message.includes("duplicate key error")) {
       return NextResponse.json(
         { error: 'El email ya está registrado' },
         { status: 409 }
