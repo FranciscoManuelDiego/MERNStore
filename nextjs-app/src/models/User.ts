@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  phone: {
+  phonenumber: {
     type: String,
     default: '',
   },
@@ -29,6 +29,11 @@ const UserSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+
+// Clear the cached model to ensure schema changes are applied
+if (mongoose.models.User) {
+  delete mongoose.models.User;
+}
 
 // Check if the model exists before creating it (for Next.js hot reload)
 const User = mongoose.models.User || mongoose.model('User', UserSchema);

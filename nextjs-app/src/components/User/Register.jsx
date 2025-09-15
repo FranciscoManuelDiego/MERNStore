@@ -1,37 +1,8 @@
 "use client"
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { useRouter } from "next/navigation";
 import { styles } from '../../styles/styleClasses';
-
-const validationSchema = Yup.object({
-  firstName: Yup.string().required('Nombre es requerido'),
-  surname: Yup.string().required('Apellido es requerido'),
-  email: Yup.string()
-  .matches(
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|mil|int|info|biz|name|mobi|pro|travel|museum|aero|coop|jobs|tel|asia|cat|post|xxx|tk|ml|ga|cf|co\.uk|co\.jp|co\.kr|com\.ar|com\.au|com\.br|com\.mx|com\.pe|com\.ve)$/i,
-    'Formato de email inválido (ejemplo: usuario@dominio.com)'
-  )
-  .required('E-mail es requerido')
-  .test('email-exists', 'Este email ya está registrado', async (value) => {
-  if (!value) return true; // Don't validate if email is empty
-  try {
-    const response = await fetch (`http://localhost:3000/api/auth/check-email`,{
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: value })
-    });
-    const data = await response.json();
-    return !data.exists; // This returns false if the email exists, don't allow the validation
-  } catch (error) {
-    console.error("Error checking email:", error);
-    return true; // In case of error, don't block the user from registering
-  }
-  }),
-  address: Yup.string().required('Dirección es requerida'),
-  phonenumber: Yup.string().required('Teléfono es requerido'),
-  password: Yup.string().min(6, 'La contraseña debe tener al menos 6 caracteres').required('Contraseña es requerida')
-});
+import { registrationSchema } from '../../utils/validationSchemas';
 
 export default function Register() {
   const router = useRouter();
@@ -76,7 +47,7 @@ export default function Register() {
           phonenumber: '',
           password: ''
         }}
-        validationSchema={validationSchema}
+        validationSchema={registrationSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (

@@ -1,29 +1,28 @@
 "use client"
-import axios  from 'axios';
+import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { styles } from '../../styles/styleClasses';
 import { useAuth } from '../../hooks/useAuth';
+import { profileUpdateSchemas, createEmailUpdateSchema } from '../../utils/validationSchemas';
 
 export default function Profile() {
     const { user, profile, isLoadingProfile, refreshProfile } = useAuth();
     const [activeTab, setActiveTab] = useState('profile');
 
     // Debug: Check if styles are imported correctly
-    console.log('Styles object:', styles);
-    console.log('inputProfile class:', styles.inputProfile);
+    //console.log('Styles object:', styles);
+    //console.log('inputProfile class:', styles.inputProfile);
 
     useEffect(() => {
         if (profile) {
             setAddressForm({ address: profile.address || '' });
-            setEmailForm({ email: profile.email || '' });
             setPhoneForm({ phone: profile.phone || '' });
         }
     }, [profile]);
 
-    // Form states
+    // Form states (keeping only address and phone for now)
     const [addressForm, setAddressForm] = useState({ address: profile?.address || '' });
-    const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    const [emailForm, setEmailForm] = useState({ email: profile?.email || '' });
     const [phoneForm, setPhoneForm] = useState({ phone: profile?.phone || '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
@@ -31,13 +30,11 @@ export default function Profile() {
     if(!user) {
         return <div className="container mx-auto px-6 py-4">Por favor, inicie sesión para ver su perfil.</div>
     }
+
     const handleAddressUpdate = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setMessage({ type: '', text: '' });
-        
-        // Log what we're sending
-        console.log("Attempting to update address with:", addressForm);
         
         try {
             const response = await fetch("http://localhost:3000/api/auth/profile/address", {
@@ -53,7 +50,6 @@ export default function Profile() {
             
             if (response.ok) {
                 setMessage({ type: 'success', text: data.message || 'Dirección actualizada correctamente' });
-                console.log("Refreshing profile...");
                 await refreshProfile();
             } else {
                 setMessage({ type: 'error', text: data.error || 'Error al actualizar la dirección' });
@@ -64,67 +60,6 @@ export default function Profile() {
                 type: 'error', 
                 text: 'Error al actualizar dirección'
             });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-        setMessage({ type: 'error', text: 'Las contraseñas no coinciden' });
-        return;
-    }
-    
-    setIsSubmitting(true);
-    setMessage({ type: '', text: '' });
-    
-    try {
-        const response = await axios.put(
-            "http://localhost:3000/api/auth/profile/password",
-            {
-                currentPassword: passwordForm.currentPassword,
-                newPassword: passwordForm.newPassword
-            },
-            { withCredentials: true }
-        );
-        
-        if (response.status === 200) {
-            setMessage({ type: 'success', text: 'Contraseña actualizada correctamente' });
-            setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        } else {
-            setMessage({ type: 'error', text: response.data.message || 'Error al actualizar contraseña' });
-        }
-        } catch (error) {
-            setMessage({ type: 'error', text: 'An error occurred while updating password.' });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handleEmailChange = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setMessage({ type: '', text: '' });
-    try {
-        const response = await axios.put(
-            "http://localhost:3000/api/auth/profile/email",
-            { email: emailForm.email },
-            { withCredentials: true }
-        );
-        
-        if (response.status === 200) {
-            setMessage({ type: 'success', text: 'Email actualizado correctamente' });
-            refreshProfile();
-        } else {
-            setMessage({ type: 'error', text: response.data.message || 'Error al actualizar email' });
-        }
-    } catch (error) {
-        console.error("Email update error:", error);
-        setMessage({ 
-            type: 'error', 
-            text: error.response?.data?.message || 'Error de conexión'
-        });
         } finally {
             setIsSubmitting(false);
         }
@@ -143,6 +78,7 @@ export default function Profile() {
                 },
                 credentials: "include",
                 body: JSON.stringify({ phone: phoneForm.phone })
+
             });
             
             const data = await response.json();
@@ -163,6 +99,7 @@ export default function Profile() {
             setIsSubmitting(false);
         }
     }
+
 
     return (
         <section className="flex justify-center items-center ">
@@ -245,74 +182,134 @@ export default function Profile() {
                 )}
                 {/* Password Form */}
                 {activeTab === 'password' && (
-                    <form onSubmit={handlePasswordChange} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
-                            <input
-                                type="password"
-                                value={passwordForm.currentPassword}
-                                onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                                placeholder="Ingresa tu contraseña actual"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
-                            <input
-                                type="password"
-                                value={passwordForm.newPassword}
-                                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                                placeholder="Ingresa tu nueva contraseña (mínimo 6 caracteres)"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                                minLength="6"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
-                            <input
-                                type="password"
-                                value={passwordForm.confirmPassword}
-                                onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                                placeholder="Confirma tu nueva contraseña"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                                minLength="6"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={styles.btnProfile}
-                        >
-                            {isSubmitting ? 'Actualizando...' : 'Cambiar Contraseña'}
-                        </button>
-                    </form>
+                    <Formik
+                        initialValues={{ currentPassword: '', newPassword: '', confirmPassword: '' }}
+                        validationSchema={profileUpdateSchemas.password}
+                        onSubmit={async (values, { setSubmitting, resetForm }) => {
+                            setMessage({ type: '', text: '' });
+                            try {
+                                const response = await axios.put(
+                                    "http://localhost:3000/api/auth/profile/password",
+                                    {
+                                        currentPassword: values.currentPassword,
+                                        newPassword: values.newPassword
+                                    },
+                                    { withCredentials: true }
+                                );
+                                
+                                if (response.status === 200) {
+                                    setMessage({ type: 'success', text: 'Contraseña actualizada correctamente' });
+                                    resetForm();
+                                } else {
+                                    setMessage({ type: 'error', text: response.data.message || 'Error al actualizar contraseña' });
+                                }
+                            } catch (error) {
+                                setMessage({ type: 'error', text: 'Error al actualizar contraseña' });
+                            } finally {
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <Form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
+                                    <Field
+                                        type="password"
+                                        name="currentPassword"
+                                        placeholder="Ingresa tu contraseña actual"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="currentPassword" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
+                                    <Field
+                                        type="password"
+                                        name="newPassword"
+                                        placeholder="Ingresa tu nueva contraseña (mínimo 4 caracteres)"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="newPassword" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
+                                    <Field
+                                        type="password"
+                                        name="confirmPassword"
+                                        placeholder="Confirma tu nueva contraseña"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="confirmPassword" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={styles.btnProfile}
+                                >
+                                    {isSubmitting ? 'Actualizando...' : 'Cambiar Contraseña'}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 )}
                 {/* Email Form */}
                 {activeTab === 'email' && (
-                    <form onSubmit={handleEmailChange} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nuevo Email</label>
-                            <input
-                                type="email"
-                                value={emailForm.email}
-                                onChange={(e) => setEmailForm({ ...emailForm, email: e.target.value })}
-                                placeholder="ejemplo@email.com"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`${styles.btnProfile}`}
-                        >
-                            {isSubmitting ? 'Actualizando...' : 'Cambiar Email'}
-                        </button>
-                        
-                    </form>
+                    <Formik
+                        initialValues={{ email: profile?.email || '' }}
+                        validationSchema={createEmailUpdateSchema(profile?.email)}
+                        onSubmit={async (values, { setSubmitting, setFieldError }) => {
+                            setMessage({ type: '', text: '' });
+                            try {
+                                const response = await axios.put(
+                                    "http://localhost:3000/api/auth/profile/email",
+                                    { email: values.email },
+                                    { withCredentials: true }
+                                );
+                                
+                                if (response.status === 200) {
+                                    setMessage({ type: 'success', text: 'Email actualizado correctamente' });
+                                    refreshProfile();
+                                } else {
+                                    setMessage({ type: 'error', text: response.data.message || 'Error al actualizar email' });
+                                }
+                            } catch (error) {
+                                console.error("Email update error:", error);
+                                if (error.response?.data?.message?.includes('email')) {
+                                    setFieldError('email', 'Este email ya está registrado');
+                                } else {
+                                    setMessage({ 
+                                        type: 'error', 
+                                        text: error.response?.data?.message || 'Error de conexión'
+                                    });
+                                }
+                            } finally {
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <Form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nuevo Email</label>
+                                    <Field
+                                        type="text"
+                                        name="email"
+                                        placeholder="ejemplo@email.com"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="email" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={`${styles.btnProfile}`}
+                                >
+                                    {isSubmitting ? 'Actualizando...' : 'Cambiar Email'}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 )}
                 {/* Phone Number Form */}
                 {activeTab === 'phone' && (

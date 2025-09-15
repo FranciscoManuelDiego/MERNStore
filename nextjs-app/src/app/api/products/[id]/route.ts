@@ -26,7 +26,7 @@ export async function GET(
       { status: 200 }
     );
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json(
       { error: 'Error interno del servidor' },

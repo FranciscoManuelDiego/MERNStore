@@ -11,7 +11,7 @@ export async function GET(request: NextRequest){
         const userId = searchParams.get('userId');
         const cart = await Cart.findOne({userId});
         return NextResponse.json(cart);
-    }catch(error: any){
+    }catch(error){
         console.error(error);
         return NextResponse.json({error: "Failed to retrieve cart"});
     }
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest){
             await cart.save();
         }
         return NextResponse.json(cart);
-    }catch(error: any){
+    }catch(error){
         console.error(error);
         return NextResponse.json({error: "Failed to add item to cart"});
     }
@@ -50,7 +50,7 @@ export async function PUT(request: NextRequest){
     try{
         await connectDB();
         const {userId, productId, quantity} = await request.json();
-        let cart = await Cart.findOne({userId});
+        const cart = await Cart.findOne({userId});
         if(!cart){
             return NextResponse.json({error: "Cart not found"});
         }
@@ -62,7 +62,7 @@ export async function PUT(request: NextRequest){
         }else{
             return NextResponse.json({error: "Product not found in cart"});
         }
-    }catch(error: any){
+    }catch(error){
         console.error(error);
         return NextResponse.json({error: "Failed to update cart"});
     }
@@ -71,14 +71,14 @@ export async function DELETE(request: NextRequest){
     try{
         await connectDB();
         const {userId, productId} = await request.json();
-        let cart = await Cart.findOne({userId});
+        const cart = await Cart.findOne({userId});
         if(!cart){
             return NextResponse.json({error: "Cart not found"});
         }
         cart.items = cart.items.filter((item : {productId: string}) => item.productId.toString() !== productId);
         await cart.save();
         return NextResponse.json(cart);
-    }catch(error: any){
+    }catch(error){
         console.error(error);
         return NextResponse.json({error: "Failed to delete item from cart"});
     }

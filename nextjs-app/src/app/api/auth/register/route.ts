@@ -8,10 +8,10 @@ export async function POST(request: NextRequest) {
     await connectDB();
     
     const body = await request.json();
-    const { firstName, surname, email, password, address, phone } = body;
+    const { firstName, surname, email, password, address, phonenumber } = body;
 
     // Validation
-    if (!firstName || !surname || !email || !password) {
+    if (!firstName || !surname || !email || !password || !address || !phonenumber) {
       return NextResponse.json(
         { error: 'Todos los campos requeridos deben estar completos' },
         { status: 400 }
@@ -19,9 +19,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Password validation
-    if (password.length < 6) {
+    if (password.length < 4) {
       return NextResponse.json(
-        { error: 'La contraseña debe tener al menos 6 caracteres' },
+        { error: 'La contraseña debe tener al menos 4 caracteres' },
         { status: 400 }
       );
     }
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       surname,
       email,
       password: hashedPassword,
-      phone: phone || '',
+      phonenumber: phonenumber || '',
       address: address || '',
     });
     
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       firstName: newUser.firstName,
       surname: newUser.surname,
       email: newUser.email,
-      phone: newUser.phone,
+      phonenumber: newUser.phonenumber,
       address: newUser.address,
     };
 
