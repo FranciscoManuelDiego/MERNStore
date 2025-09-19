@@ -8,55 +8,72 @@ export async function GET(request: NextRequest) {
     try {
         await connectDB();
         
-        // Get query parameters for filtering
         const { searchParams } = new URL(request.url);
         const category = searchParams.get('category');
         const page = parseInt(searchParams.get('page') || '1', 10);
-        const limit = parseInt(searchParams.get('limit') || '6', 10); // Fixed: use 10 as radix
-        // parseInt('6', 10) parses '6' as base-10 (decimal) number
-        // Returns 6 as expected
+        const limit = parseInt(searchParams.get('limit') || '6', 10);
         const skip = (page - 1) * limit;
 
-        console.log('API params:', { category, page, limit, skip }); // Debug
+        console.log('📝 API params:', { category, page, limit, skip });
+
+        // Get ALL products first to see what we have
+        const allProducts = await Product.find({}).limit(5);
+        console.log('📂 Sample products from DB:', allProducts.map(p => ({
+            name: p.name,
+            category: p.category,
+            id: p._id
+        })));
+
+        // Get all unique categories (case-sensitive)
+        const allCategories = await Product.distinct('category');
+        console.log('📂 Available categories in DB:', allCategories);
 
         let query = {};
         if (category && category !== 'all') {
-            query = { category: category };
+            // Try case-insensitive search
+            query = { 
+                category: { 
+                    $regex: new RegExp(`^${category}$`, 'i') // Case-insensitive exact match
+                }
+            };
+            console.log('🔍 Using case-insensitive query:', query);
         }
 
-        console.log('MongoDB query:', query); // Debug
-
-    // Get the total count for pagination
         const totalCount = await Product.countDocuments(query);
+        console.log('📊 Total documents matching query:', totalCount);
+        
+        if (totalCount === 0 && category) {
+            console.log('⚠️ No products found for category:', category);
+            console.log('⚠️ Available categories:', allCategories);
+            console.log('⚠️ Check if category name matches exactly (case-sensitive)');
+        }
+
         const totalPages = Math.ceil(totalCount / limit);
 
-        console.log('Pagination calculation:', { totalCount, limit, totalPages }); // Debug
-
         const products = await Product.find(query)
-        .skip(skip)
-        .limit(limit)
-        .sort({ createdAt: -1 });
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
 
-        console.log(`Returning ${products.length} products for page ${page}`); // Debug
-        console.log('Final response:', { 
-            productsLength: products.length,
-            totalCount,
-            page, 
-            totalPages,
-            hasMore: page < totalPages
-        }); // Debug
-        
+        console.log('📦 Products found:', products.length);
+
         return NextResponse.json({ 
             products, 
             totalCount,
             page, 
             totalPages,
-            hasMore: page < totalPages
+            hasMore: page < totalPages,
+            debug: {
+                query,
+                allCategories,
+                requestedCategory: category,
+                sampleProducts: allProducts.slice(0, 2)
+            }
         });
     } catch (error) {
-        console.error('Products fetch error:', error);
+        console.error('❌ Products API error:', error);
         return NextResponse.json(
-            { error: 'Error fetching products' },
+            { error: 'Error fetching products', details: error.message },
             { status: 500 }
         );
     }

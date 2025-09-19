@@ -4,79 +4,108 @@ import ItemList from "../ItemList/ItemList";
 import { useParams, useRouter, useSearchParams  } from "next/navigation";
 
 const ItemListContainer = () => {
-    // Fetch data and products from back
     const { category } = useParams();
-    const router = useRouter();
     const searchParams = useSearchParams();
+    const router = useRouter();
+    
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-     const [pagination, setPagination] = useState({
+    const [pagination, setPagination] = useState({
         currentPage: 1,
         totalPages: 1,
         totalCount: 0
     });
 
-    // Get current page from URL or default to 1
     const currentPage = parseInt(searchParams.get('page') || '1');
+    const activeCategory = category || searchParams.get('category');
+    
+    // ADD THESE DEBUG LOGS
+   //console.log('=== ITEMLISTCONTAINER DEBUG ===');
+   //console.log('URL pathname:', window.location.pathname);
+   //console.log('URL search:', window.location.search);
+   //onsole.log('useParams category:', category);
+   // console.log('searchParams category:', searchParams.get('category'));
+   // console.log('activeCategory:', activeCategory);
+   // console.log('currentPage:', currentPage);
+   // console.log('products state:', products);
+   // console.log('loading state:', loading);
+   // console.log('error state:', error);
+   // console.log('================================');
 
     useEffect(() => {
+        console.log('🔄 useEffect triggered with:', { activeCategory, currentPage });
         setLoading(true);
-
-        // Build the API URL with pagination parameters
+        
         const apiUrl = new URL('/api/products', window.location.origin);
         apiUrl.searchParams.set('page', currentPage.toString());
-        apiUrl.searchParams.set('limit', '6'); // Use your API's default
+        apiUrl.searchParams.set('limit', '6');
         
-        if (category) {
-            apiUrl.searchParams.set('category', category);
+        if (activeCategory && activeCategory !== 'all') {
+            apiUrl.searchParams.set('category', activeCategory);
         }
 
-        console.log('Fetching from:', apiUrl.toString()); // Debug
+        //console.log('📡 API URL:', apiUrl.toString());
 
         fetch(apiUrl.toString())
             .then(res => {
+                //console.log('📥 Response status:', res.status);
+                //console.log('📥 Response ok:', res.ok);
+                
                 if (!res.ok) {
-                    throw new Error('Failed to fetch products');
+                    throw new Error(`HTTP ${res.status}: Failed to fetch products`);
                 }
                 return res.json();
             })
             .then(data => {
-                console.log('Raw API response:', data); // Debug log
-                console.log('Type of data:', typeof data); // Debug log
-                console.log('Is array?', Array.isArray(data)); // Debug log
-                setProducts(data.products || []); // Adjust based on actual API response structure
+                console.log('📦 Raw API response:', data);
+                console.log('📦 Products array:', data.products);
+                console.log('📦 Products length:', data.products?.length);
+                console.log('📦 Total count:', data.totalCount);
+                console.log('📦 Total pages:', data.totalPages);
+                
+                setProducts(data.products || []);
                 setPagination({
-                    currentPage: data.page,
-                    totalPages: data.totalPages,
-                    totalCount: data.totalCount
+                    currentPage: data.page || currentPage,
+                    totalPages: data.totalPages || 1,
+                    totalCount: data.totalCount || 0
                 });
                 setError(null);
             })
             .catch(err => {
-                console.error('Error fetching products:', err);
+                console.error('❌ Fetch error:', err);
                 setError(err.message);
+                setProducts([]);
             })
             .finally(() => {
+                console.log('✅ Setting loading to false');
                 setLoading(false);
             });
-    }, [category, currentPage]); // Re-fetch when category or page changes
+    }, [activeCategory, currentPage]);
 
+    console.log('🎨 Rendering with:', {
+        loading,
+        error,
+        productsCount: products.length,
+        filteredProductsCount: products.length
+    });
 
-    //The route API is filtering by category, no need for client side filtering.
-    const filteredProducts = products; // No additional filtering needed
-
-    //console.log('Final filtered products:', filteredProducts); // Debug log
+    // Since API already filters, use products directly
+    const filteredProducts = products;
 
         const goToPage = (page) => {
         const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set('page', page.toString());
+        if (activeCategory) {
+            newSearchParams.set('category', activeCategory);
+        }
         const newUrl = `${window.location.pathname}?${newSearchParams.toString()}`;
         router.push(newUrl);
     };
 
 
     if (loading) {
+        console.log('🔄 Rendering loading state');
         return (
             <div className="flex justify-center items-center py-8">
                 <div className="text-lg">Cargando productos...</div>
@@ -85,6 +114,7 @@ const ItemListContainer = () => {
     }
 
     if (error) {
+        console.log('❌ Rendering error state:', error);
         return (
             <div className="flex justify-center items-center py-8">
                 <div className="text-red-500">Error: {error}</div>
@@ -92,39 +122,53 @@ const ItemListContainer = () => {
         );
     }
 
-    if (filteredProducts.length === 0 && category) {
+    if (products.length === 0) {
+        console.log('📭 Rendering empty state');
         return (
             <div className="flex justify-center items-center py-8">
                 <div className="text-gray-500">
-                    No se encontraron productos en la categoría "{category}"
+                    {activeCategory 
+                        ? `No se encontraron productos en la categoría "${activeCategory}"` 
+                        : "No hay productos disponibles."
+                    }
                 </div>
             </div>
         );
     }
 
+    console.log('✅ Rendering products list with', products.length, 'items');
     return (
         <>
+            {/* Show current category */}
+            {activeCategory && (
+                <div className="mt-4 mb-4 p-4 bg-blue-50 rounded-lg w-[200px] mx-auto">
+                    <h2 className="text-xl font-semibold text-gray-700 text-center ">
+                        Categoría actual: {activeCategory}
+                    </h2>
+                </div>
+            )}
+            
             <ItemList product={filteredProducts} />
            {/* Pagination Controls */}
             {pagination.totalPages > 1 && (
-                <div className="flex justify-center items-center mt-8 space-x-4">
+                <div className="flex justify-center items-center mt-8 mb-8 space-x-2 ">
                     <div className="text-gray-600 text-sm">
                         Página {pagination.currentPage} de {pagination.totalPages} 
                         ({pagination.totalCount} productos total)
                     </div>
                     
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-4">
                         {pagination.currentPage > 1 && (
                             <button 
                                 onClick={() => goToPage(pagination.currentPage - 1)}
-                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
                             >
                                 ← Anterior
                             </button>
                         )}
                         
                         {/* Page numbers */}
-                        <div className="flex space-x-1">
+                        <div className="flex space-x-2">
                             {[...Array(pagination.totalPages)].map((_, i) => {
                                 const pageNum = i + 1;
                                 return (
@@ -134,7 +178,7 @@ const ItemListContainer = () => {
                                         className={`px-3 py-2 rounded transition-colors ${
                                             pageNum === pagination.currentPage
                                                 ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer '
                                         }`}
                                     >
                                         {pageNum}
@@ -146,7 +190,7 @@ const ItemListContainer = () => {
                         {pagination.currentPage < pagination.totalPages && (
                             <button 
                                 onClick={() => goToPage(pagination.currentPage + 1)}
-                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
                             >
                                 Siguiente →
                             </button>

@@ -31,11 +31,14 @@ const Cart = () => {
         try {
             const orderData = {
                 items: cart.map(item => ({
-                    product: item.id,
+                    productId: item._id || item.productId,
+                    name: item.name,
                     quantity: item.cantidad,
+                    imageUrl: item.imageUrl || item.imgUrl, // Check your field names
                     price: item.precio
                 })),
-                total: totalPrice
+                total: totalPrice,
+                address: user.address
             };
             
             const response = await fetch('/api/orders', {
@@ -50,6 +53,7 @@ const Cart = () => {
             if (response.status === 201) {
                 cleanCart();
                 setOrderComplete(true);
+                console.log('Order created successfully:', response);
             }
         } catch (error) {
             console.error('Error creating order:', error);
@@ -159,7 +163,7 @@ const Cart = () => {
                 <div className="flex flex-col gap-3 mt-6">
                     <button 
                         onClick={handleClearCart}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300"
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 cursor-pointer"
                     >
                         Vaciar Carrito
                     </button>
@@ -168,14 +172,14 @@ const Cart = () => {
                         <button 
                             onClick={createOrder}
                             disabled={isProcessing}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50"
+                            className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50 cursor-pointer"
                         >
                             {isProcessing ? 'Procesando...' : 'Finalizar Compra'}
                         </button>
                     ) : (
                         <Link 
                             href="/login" 
-                            className={`bg-${styles.primary} hover:bg-${styles.seconday} text-white font-semibold text-center py-2 px-4 rounded-md transition duration-300 block`}
+                            className={`bg-${styles.primary} hover:bg-${styles.seconday} text-white font-semibold text-center py-2 px-4 rounded-md transition duration-300 block cursor-pointer`}
                         >
                             Iniciar Sesión para Comprar
                         </Link>
@@ -183,7 +187,7 @@ const Cart = () => {
                     
                     <Link 
                         href="/" 
-                        className="text-yellow-500 hover:text-yellow-700 text-center cursor"
+                        className="text-yellow-500 hover:text-yellow-700 text-center cursor-pointer"
                     >
                         Continuar Comprando
                     </Link>

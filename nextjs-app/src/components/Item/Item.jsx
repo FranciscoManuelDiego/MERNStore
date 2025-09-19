@@ -5,7 +5,7 @@ import Link from "next/link";
 const Item = ({ SingleProduct }) => {
     return (
         <li className="flex flex-col items-center bg-white rounded-lg shadow-md p-4 m-2">
-            <h3 className="text-lg font-bold text-black mb-2">{SingleProduct.name}</h3>
+            <h3 className="text-lg font-bold text-black mb-2 text-center">{SingleProduct.name}</h3>
             <img 
                 src={SingleProduct.imageUrl} 
                 alt={SingleProduct.name} 

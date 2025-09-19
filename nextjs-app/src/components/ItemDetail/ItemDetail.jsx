@@ -1,5 +1,5 @@
 "use client"
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext} from 'react';
 import ItemCount from "../Counter/ItemCount";
 import { useCart } from '../../hooks/useCart';
 import {styles} from "../../styles/styleClasses"

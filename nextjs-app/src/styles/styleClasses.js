@@ -100,8 +100,8 @@ export const styles = {
   categoryGrid: "grid grid-cols-1 md:grid-cols-2 gap-6",
 
   //Cart styles
-
   textCart: "text-gray-700"
+
 };
 
 // Color palette
