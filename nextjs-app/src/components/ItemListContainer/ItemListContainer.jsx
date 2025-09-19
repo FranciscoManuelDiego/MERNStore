@@ -140,19 +140,19 @@ const ItemListContainer = () => {
     return (
         <>
             {/* Show current category */}
-            {activeCategory && (
-                <div className="mt-4 mb-4 p-4 bg-blue-50 rounded-lg w-[200px] mx-auto">
-                    <h2 className="text-xl font-semibold text-gray-700 text-center ">
-                        Categoría actual: {activeCategory}
-                    </h2>
-                </div>
-            )}
-            
+        {activeCategory && (
+            <div className="mt-4 mb-4 p-4 bg-blue-50 rounded-lg mx-auto text-center w-[300px]">
+                <span className="text-xl font-semibold text-gray-700 whitespace-nowrap ">
+                    Categoría actual: {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
+                </span>
+            </div>
+        )}
+                    
             <ItemList product={filteredProducts} />
            {/* Pagination Controls */}
             {pagination.totalPages > 1 && (
                 <div className="flex justify-center items-center mt-8 mb-8 space-x-2 ">
-                    <div className="text-gray-600 text-sm">
+                    <div className="text-xl font-semibold text-gray-700 whitespace-nowrap">
                         Página {pagination.currentPage} de {pagination.totalPages} 
                         ({pagination.totalCount} productos total)
                     </div>
