@@ -150,54 +150,92 @@ const ItemListContainer = () => {
                     
             <ItemList product={filteredProducts} />
            {/* Pagination Controls */}
-            {pagination.totalPages > 1 && (
-                <div className="flex justify-center items-center mt-8 mb-8 space-x-2 ">
-                    <div className="text-xl font-semibold text-gray-700 whitespace-nowrap">
-                        Página {pagination.currentPage} de {pagination.totalPages} 
-                        ({pagination.totalCount} productos total)
-                    </div>
-                    
-                    <div className="flex space-x-4">
-                        {pagination.currentPage > 1 && (
-                            <button 
-                                onClick={() => goToPage(pagination.currentPage - 1)}
-                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
-                            >
-                                ←
-                            </button>
-                        )}
+        {pagination.totalPages > 1 && (
+            <section className="flex justify-center max-w-7xl mx-auto px-4">
+                <div className="w-full max-w-md sm:max-w-2xl">
+                    {/* Mobile-first pagination */}
+                    <div className="flex flex-col items-center mt-8 mb-8 space-y-4">
                         
-                        {/* Page numbers */}
-                        <div className="flex space-x-2">
-                            {[...Array(pagination.totalPages)].map((_, i) => {
-                                const pageNum = i + 1;
-                                return (
-                                    <button
-                                        key={pageNum}
-                                        onClick={() => goToPage(pageNum)}
-                                        className={`px-3 py-2 rounded transition-colors ${
-                                            pageNum === pagination.currentPage
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer '
-                                        }`}
-                                    >
-                                        {pageNum}
-                                    </button>
-                                );
-                            })}
+                        {/* Page info */}
+                        <div className="text-center">
+                            <div className="text-sm sm:text-base font-semibold text-gray-700">
+                                Página {pagination.currentPage} de {pagination.totalPages}
+                            </div>
+                            <div className="text-xs sm:text-sm text-gray-600">
+                                {pagination.totalCount} productos total
+                            </div>
                         </div>
                         
-                        {pagination.currentPage < pagination.totalPages && (
-                            <button 
-                                onClick={() => goToPage(pagination.currentPage + 1)}
-                                className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
-                            >
-                                →
-                            </button>
-                        )}
+                        {/* Buttons container */}
+                        <div className="flex items-center justify-center w-full">
+                            
+                            {/* Mobile layout (< 640px) */}
+                            <div className="flex sm:hidden items-center space-x-2 w-full justify-between">
+                                <button 
+                                    onClick={() => goToPage(pagination.currentPage - 1)}
+                                    disabled={pagination.currentPage <= 1}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed touch-manipulation"
+                                >
+                                    ←
+                                </button>
+                                
+                                <span className="text-sm font-medium">
+                                    {pagination.currentPage} / {pagination.totalPages}
+                                </span>
+                                
+                                <button 
+                                    onClick={() => goToPage(pagination.currentPage + 1)}
+                                    disabled={pagination.currentPage >= pagination.totalPages}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:bg-gray-300 disabled:cursor-not-allowed touch-manipulation"
+                                >
+                                    →
+                                </button>
+                            </div>
+                            
+                            {/* Desktop layout (>= 640px) */}
+                            <div className="hidden sm:flex items-center space-x-2">
+                                {pagination.currentPage > 1 && (
+                                    <button 
+                                        onClick={() => goToPage(pagination.currentPage - 1)}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                    >
+                                        ← Anterior
+                                    </button>
+                                )}
+                                
+                                <div className="flex space-x-1">
+                                    {[...Array(Math.min(pagination.totalPages, 5))].map((_, i) => {
+                                        const pageNum = i + 1;
+                                        return (
+                                            <button
+                                                key={pageNum}
+                                                onClick={() => goToPage(pageNum)}
+                                                className={`px-3 py-2 rounded transition-colors ${
+                                                    pageNum === pagination.currentPage
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                }`}
+                                            >
+                                                {pageNum}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                
+                                {pagination.currentPage < pagination.totalPages && (
+                                    <button 
+                                        onClick={() => goToPage(pagination.currentPage + 1)}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                    >
+                                        Siguiente →
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            )}
+            </section>
+        )}
         </>
     );
 };
