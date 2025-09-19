@@ -163,7 +163,7 @@ const ItemListContainer = () => {
                                 onClick={() => goToPage(pagination.currentPage - 1)}
                                 className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
                             >
-                                ← Anterior
+                                ←
                             </button>
                         )}
                         
@@ -192,7 +192,7 @@ const ItemListContainer = () => {
                                 onClick={() => goToPage(pagination.currentPage + 1)}
                                 className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors cursor-pointer"
                             >
-                                Siguiente →
+                                →
                             </button>
                         )}
                     </div>
