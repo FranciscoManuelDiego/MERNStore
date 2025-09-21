@@ -63,9 +63,7 @@ export const styles = {
 
   // Product styles
   productCard: "bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105",
-  
-  productImage: "w-full h-48 object-cover",
-  
+
   productTitle: "text-lg font-semibold text-gray-800 mb-2",
   
   productPrice: "text-xl font-bold text-yellow-600",
@@ -73,11 +71,13 @@ export const styles = {
   //ItemDetail
   productDetailContainer: "bg-white rounded-lg shadow-md p-6",
 
-  productDetailTitle: "text-2xl font-bold text-black mb-4",
+  productDetailTitle: "xl:text-2xl md:text-xl sm:text-md font-bold text-black mb-4",
 
-  productDetailDescription: "text-gray-600 mb-4 my-2",
-  
-  productDetailPrice: "text-xl font-bold text-gray-800 mb-4 my-2",
+  productDetailDescription: "xl:text-lg md:text-base sm:text-sm text-gray-600 mb-2 my-2",
+
+  productCardImage: "w-48 h-48 object-contain mb-2 rounded",
+
+  productDetailPrice: "xl:text-lg md:text-base sm:text-sm  font-bold text-gray-800 mb-2 my-2",
 
   itemCountButton: "bg-blue-500 hover:bg-blue-400 text-black font-bold py-2 px-4 rounded cursor-pointer",
 
@@ -92,7 +92,7 @@ export const styles = {
 
   //Carrousel styles
   carouselContainer: "relative max-w-[1200px] mx-auto",
-  carouselImage: "relative xl:h-[600px] xl:w-[1200px] md:h-[500px] md:w-[800px] sm:h-[300px] sm:w-[600px]",
+  carouselImage: "relative xl:h-[600px] xl:w-[1200px] md:h-[500px] md:w-[1000px] sm:h-[300px] sm:w-[600px]",
 
   // Grid layouts
   productGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6",

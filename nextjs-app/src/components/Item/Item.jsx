@@ -4,16 +4,17 @@ import Link from "next/link";
 
 const Item = ({ SingleProduct }) => {
     return (
-        <li className="flex flex-col items-center bg-white rounded-lg shadow-md p-4 m-2">
-            <h3 className="text-lg font-bold text-black mb-2 text-center">{SingleProduct.name}</h3>
+        <li className="flex flex-col bg-white rounded-lg shadow-md p-4 m-2 space-y-2">
+            <h3 className={styles.productTitle}>{SingleProduct.name}</h3>
+            <div className="w-full h-48 flex items-center justify-center mb-4 bg-gray-50 rounded-lg overflow-hidden">
             <img 
                 src={SingleProduct.imageUrl} 
                 alt={SingleProduct.name} 
-                className="w-32 h-32 object-contain mb-2 rounded"
+                className={styles.productCardImage}
             />
-            <p className="text-gray-700 font-semibold">Precio: <span className="text-gray-800">{SingleProduct.price} AR$</span></p>
-            <p className="text-gray-600">Stock: {SingleProduct.stock}</p>
-            <p className="text-gray-500 text-sm mb-3 text-center">{SingleProduct.description}</p>
+            </div>
+            <p className={styles.productDetailPrice}>Precio: <span className="text-gray-800">{SingleProduct.price} AR$</span></p>
+            <p className={styles.productDetailDescription} >{SingleProduct.description}</p>
             <Link href={`/products/${SingleProduct._id}`}>
                 <button className={`${styles.btnPrimary}`}>Ver Más</button>
             </Link>

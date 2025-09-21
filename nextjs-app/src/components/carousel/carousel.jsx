@@ -8,7 +8,7 @@ import {styles} from '../../styles/styleClasses';
 
 export default function CarouselComponent() {
     return (
-        <div className="max-w-[1200px] mx-auto">
+        <div className="xl:w-[1200px] md:w-full mx-auto">
             <Carousel
                 autoPlay
                 infiniteLoop

@@ -23,7 +23,7 @@ export default function Profile() {
 
     // Form states (keeping only address and phone for now)
     const [addressForm, setAddressForm] = useState({ address: profile?.address || '' });
-    const [phoneForm, setPhoneForm] = useState({ phone: profile?.phone || '' });
+    const [phoneForm, setPhoneForm] = useState({ phone: profile?.phonenumber || '' });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
@@ -153,7 +153,7 @@ export default function Profile() {
                             <h2 className={styles.profileTexting}>{profile.firstName} {profile.surname}</h2>
                             <p className={styles.profileTexting}>Email: {profile.email}</p>
                             <p className={styles.profileTexting}>Dirección: {profile.address || 'No registrada'}</p>
-                            <p className={styles.profileTexting}>Teléfono: {profile.phone || 'No registrado'}</p>
+                            <p className={styles.profileTexting}>Teléfono: {profile.phonenumber || 'No registrado'}</p>
                         </div>
                     ) :  <p>Cargando...</p>
                 )}

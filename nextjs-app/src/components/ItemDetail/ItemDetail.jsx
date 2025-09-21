@@ -34,12 +34,14 @@ const ItemDetail = ({products}) => {
 
     return (
         <div className={`${styles.productDetailContainer} flex lg:flex-row flex-col lg:items-center 
-        lg:justify-center gap-4 xl:w-[1000px] md:w-[800px] sm:w-[400px] w-[300px] mx-auto my-8`}>
-            <img
-                src={products.imageUrl}
-                alt={products.name}
-                className="xl:w-128 xl:h-128 md:w-64 md:h-64 sm:w-32 sm:h-32 object-contain mb-2 rounded"
-            />
+        lg:justify-center gap-4 xl:w-[1000px] xl:h-[600px] md:w-[800px] md:h-[400px]  sm:w-[400px] sm:h-[300px] mx-auto my-4`}>
+            <div className="flex justify-center items-center w-full lg:w-auto">
+                <img
+                    src={products.imageUrl}
+                    alt={products.name}
+                    className={`${styles.productCardImage} xl:h-[400px] xl:w-[400px] md:h-[300px] md:w-[300px] sm:h-[200px] sm:w-[200px] mx-auto`}
+                />
+            </div>
             <div>
                 <div className='justify-center items-center sm:flex-col sm:justify-start sm:items-start sm:text-left text-center'>
                 <span className={styles.productDetailTitle}>{products.name}</span>

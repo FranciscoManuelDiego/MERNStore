@@ -2,8 +2,8 @@ import Item from "../Item/Item";
 
 const ItemList = ({product}) => {
     return (
-        <section className="flex justify-center items-center py-4 mx-auto">
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full xl:max-w-6xl md:max-w-4xl">
+        <section className="flex justify-center py-4 mx-auto px-2 sm:px-4">
+            <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 w-full max-w-7xl">
                 {product.map(p => (
                     <Item key={p._id} SingleProduct={p}/>
                 ))}
