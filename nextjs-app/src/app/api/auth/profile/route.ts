@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
       firstName: user.firstName,
       surname: user.surname,
       email: user.email,
-      phone: user.phone,
+      phonenumber: user.phonenumber, // Fixed: use phonenumber from model
       address: user.address,
     };
 

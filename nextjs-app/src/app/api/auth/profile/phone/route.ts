@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest) {
     // Update user phone
     const updatedUser = await User.findByIdAndUpdate(
       decoded.userId,
-      { phone },
+      { phonenumber: phone }, // Fixed: use phonenumber field from model
       { new: true }
     ).select('-password');
 
@@ -51,7 +51,7 @@ export async function PUT(request: NextRequest) {
           firstName: updatedUser.firstName,
           surname: updatedUser.surname,
           email: updatedUser.email,
-          phone: updatedUser.phone,
+          phonenumber: updatedUser.phonenumber, // Fixed: use phonenumber field
           address: updatedUser.address,
         }
       },

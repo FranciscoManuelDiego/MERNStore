@@ -56,14 +56,20 @@ export const validationSchemas = {
   firstName: Yup.string().required('Nombre es requerido'),
   surname: Yup.string().required('Apellido es requerido'),
   address: Yup.string().required('Dirección es requerida'),
-  phonenumber: Yup.string().required('Teléfono es requerido'), 
+  phonenumber: Yup.string().required('Teléfono es requerido')
+  .matches(/^(\+\d{1,3}\s?)?\d{8,15}$/, 'Número de teléfono inválido')
+  .min(8, 'Mínimo 8 dígitos')
+  .max(15, 'Máximo 15 dígitos'), 
+  phone: Yup.string().required('Teléfono es requerido')
+  .matches(/^(\+\d{1,3}\s?)?\d{8,15}$/, 'Número de teléfono inválido')
+  .min(8, 'Mínimo 8 dígitos')
+  .max(15, 'Máximo 15 dígitos'), 
   password: Yup.string().min(4, 'La contraseña debe tener al menos 4 caracteres').required('Contraseña es requerida'),
   newPassword: Yup.string().min(6, 'La nueva contraseña debe tener al menos 6 caracteres').required('Nueva contraseña es requerida'),
   currentPassword: Yup.string().required('Contraseña actual es requerida'),
   confirmPassword: Yup.string()
     .required('Confirmar contraseña es requerido')
     .oneOf([Yup.ref('newPassword')], 'Las contraseñas no coinciden'),
-  phone: Yup.string().required('Teléfono es requerido') // Keep this for profile updates
 };
 
 // Complete registration schema
@@ -72,7 +78,7 @@ export const registrationSchema = Yup.object({
   surname: validationSchemas.surname,
   email: emailWithExistenceCheck,
   address: validationSchemas.address,
-  phonenumber: validationSchemas.phonenumber, // Fixed: phonenumber instead of phone
+  phonenumber: validationSchemas.phonenumber, 
   password: validationSchemas.password
 });
 

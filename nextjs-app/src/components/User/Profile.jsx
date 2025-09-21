@@ -9,97 +9,11 @@ import { profileUpdateSchemas, createEmailUpdateSchema } from '../../utils/valid
 export default function Profile() {
     const { user, profile, isLoadingProfile, refreshProfile } = useAuth();
     const [activeTab, setActiveTab] = useState('profile');
-
-    // Debug: Check if styles are imported correctly
-    //console.log('Styles object:', styles);
-    //console.log('inputProfile class:', styles.inputProfile);
-
-    useEffect(() => {
-        if (profile) {
-            setAddressForm({ address: profile.address || '' });
-            setPhoneForm({ phone: profile.phone || '' });
-        }
-    }, [profile]);
-
-    // Form states (keeping only address and phone for now)
-    const [addressForm, setAddressForm] = useState({ address: profile?.address || '' });
-    const [phoneForm, setPhoneForm] = useState({ phone: profile?.phonenumber || '' });
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
 
     if(!user) {
         return <div className="container mx-auto px-6 py-4">Por favor, inicie sesión para ver su perfil.</div>
     }
-
-    const handleAddressUpdate = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setMessage({ type: '', text: '' });
-        
-        try {
-            const response = await fetch("http://localhost:3000/api/auth/profile/address", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({ address: addressForm.address })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                setMessage({ type: 'success', text: data.message || 'Dirección actualizada correctamente' });
-                await refreshProfile();
-            } else {
-                setMessage({ type: 'error', text: data.error || 'Error al actualizar la dirección' });
-            }
-        } catch (error) {
-            console.error("Address update error:", error);
-            setMessage({ 
-                type: 'error', 
-                text: 'Error al actualizar dirección'
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handlePhoneChange = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        setMessage({ type: '', text: '' });
-        
-        try {
-            const response = await fetch("/api/auth/profile/phone", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: "include",
-                body: JSON.stringify({ phone: phoneForm.phone })
-
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                setMessage({ type: 'success', text: data.message || 'Teléfono actualizado correctamente' });
-                await refreshProfile();
-            } else {
-                setMessage({ type: 'error', text: data.error || 'Error al actualizar teléfono' });
-            }
-        } catch (error) {
-            console.error("Phone update error:", error);
-            setMessage({ 
-                type: 'error', 
-                text: 'Error de conexión'
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    }
-
 
     return (
         <section className="flex justify-center items-center ">
@@ -159,26 +73,57 @@ export default function Profile() {
                 )}
                 {/* Address Form */}
                 {activeTab === 'address' && (
-                    <form onSubmit={handleAddressUpdate} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                            <input
-                                type="text"
-                                value={addressForm.address}
-                                onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
-                                placeholder="Ingresa tu dirección completa"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`${styles.btnProfile}`}
-                        >
-                            {isSubmitting ? 'Actualizando...' : 'Actualizar Dirección'}
-                        </button>
-                    </form>
+                    <Formik
+                        initialValues={{ address: profile?.address || '' }}
+                        validationSchema={profileUpdateSchemas.address}
+                        onSubmit={async (values, { setSubmitting }) => {
+                            setMessage({ type: '', text: '' });
+                            try {
+                                const response = await axios.put(
+                                    "/api/auth/profile/address",
+                                    { address: values.address },
+                                    { withCredentials: true }
+                                );
+                                
+                                if (response.status === 200) {
+                                    setMessage({ type: 'success', text: 'Dirección actualizada correctamente' });
+                                    await refreshProfile();
+                                } else {
+                                    setMessage({ type: 'error', text: response.data.message || 'Error al actualizar dirección' });
+                                }
+                            } catch (error) {
+                                console.error("Address update error:", error);
+                                setMessage({ 
+                                    type: 'error', 
+                                    text: error.response?.data?.message || 'Error al actualizar dirección'
+                                });
+                            } finally {
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <Form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                                    <Field
+                                        type="text"
+                                        name="address"
+                                        placeholder="Ingresa tu dirección completa"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="address" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={styles.btnProfile}
+                                >
+                                    {isSubmitting ? 'Actualizando...' : 'Actualizar Dirección'}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 )}
                 {/* Password Form */}
                 {activeTab === 'password' && (
@@ -313,26 +258,57 @@ export default function Profile() {
                 )}
                 {/* Phone Number Form */}
                 {activeTab === 'phone' && (
-                    <form onSubmit={handlePhoneChange} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Nuevo Teléfono</label>
-                            <input
-                                type="text"
-                                value={phoneForm.phone}
-                                onChange={(e) => setPhoneForm({ ...phoneForm, phone: e.target.value })}
-                                placeholder="+54 11 1234-5678"
-                                className={"w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"}
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`${styles.btnProfile}`}
-                        >
-                            {isSubmitting ? 'Actualizando...' : 'Cambiar Teléfono'}
-                        </button>
-                    </form>
+                    <Formik
+                        initialValues={{ phone: profile?.phonenumber || '' }}
+                        validationSchema={profileUpdateSchemas.phone}
+                        onSubmit={async (values, { setSubmitting }) => {
+                            setMessage({ type: '', text: '' });
+                            try {
+                                const response = await axios.put(
+                                    "/api/auth/profile/phone",
+                                    { phone: values.phone },
+                                    { withCredentials: true }
+                                );
+                                
+                                if (response.status === 200) {
+                                    setMessage({ type: 'success', text: 'Teléfono actualizado correctamente' });
+                                    await refreshProfile();
+                                } else {
+                                    setMessage({ type: 'error', text: response.data.message || 'Error al actualizar teléfono' });
+                                }
+                            } catch (error) {
+                                console.error("Phone update error:", error);
+                                setMessage({ 
+                                    type: 'error', 
+                                    text: error.response?.data?.message || 'Error de conexión'
+                                });
+                            } finally {
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <Form className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nuevo Teléfono</label>
+                                    <Field
+                                        type="text"
+                                        name="phone"
+                                        placeholder="+54 11 1234-5678"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                    />
+                                    <ErrorMessage name="phone" component="span" className="block text-red-500 text-xs mt-1" />
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className={styles.btnProfile}
+                                >
+                                    {isSubmitting ? 'Actualizando...' : 'Cambiar Teléfono'}
+                                </button>
+                            </Form>
+                        )}
+                    </Formik>
                 )}
             </div>
         </section>
