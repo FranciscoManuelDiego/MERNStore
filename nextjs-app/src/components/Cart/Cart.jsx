@@ -102,40 +102,48 @@ const Cart = () => {
 
     // Show cart with items
     return (
-        <section className="flex space-x-4 p-4">
+        <section className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 p-4">
             {/* Left side - Cart items */}
-            <div className="flex-1 bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="flex-1 bg-white rounded-lg shadow-md">
                 <h1 className={`${styles.cartH1} p-4`}>Tu Carrito de Compras</h1>
                 
-                {/* Cart header */}
-                <div className="grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-600">
+                {/* Cart header - Desktop only */}
+                <div className="hidden md:grid grid-cols-12 bg-gray-100 p-4 font-semibold text-gray-600">
                     <div className="col-span-6">Producto</div>
                     <div className="col-span-2 text-center">Precio</div>
                     <div className="col-span-2 text-center">Cantidad</div>
-                    <div className="col-span-2 text-center">Total</div>
+                    <div className="col-span-1 text-center">Total</div>
+                    <div className="col-span-1 text-center">Eliminar</div>
                 </div>
-                
+            
                 {/* Cart items */}
                 {cart.map((producto) => (
-                    <div key={producto.id} className={`grid grid-cols-12 p-4 items-center border-b ${styles.textCart}`}>
-                        <div className="col-span-6 flex items-center">
+                    <div key={producto.id} className={`grid grid-cols-12 p-4 items-center border-b ${styles.textCart} gap-2`}>
+                        <div className="col-span-11 md:col-span-6 flex items-center">
                             <img 
                                 src={producto.img} 
                                 alt={producto.name} 
                                 className="w-32 h-32 object-contain rounded mr-4"
                             />
                             <div>
-                                <h3 className="font-semibold">{producto.name}</h3>
-                                <p className="text-sm text-gray-600">{producto.category}</p>
+                                <h3 className="xl:text-lg font-semibold md:text-md">{producto.name}</h3>
+                                <p className="text-sm text-gray-600">Categoría: {producto.category}</p>
+                                <div className="text-sm md:hidden">Precio: ${producto.price || 0}</div>
+                                <div className="text-sm md:hidden">Cantidad: {producto.quantity || 0}</div>
+                                <div className="text-sm font-semibold md:hidden">Total: ${(producto.quantity || 0) * (producto.price || 0)}</div>
                             </div>
                         </div>
-                        <div className="col-span-2 text-center">${producto.price || 0}</div>
-                        <div className="col-span-2 text-center">{producto.quantity || 0}</div>
-                        <div className="col-span-1 text-center">${(producto.quantity || 0) * (producto.price || 0)}</div>
+                        
+                        {/* Desktop layout - additional columns for price, quantity, total */}
+                        <div className="hidden md:block md:col-span-2 text-center">${producto.price || 0}</div>
+                        <div className="hidden md:block md:col-span-2 text-center">{producto.quantity || 0}</div>
+                        <div className="hidden md:block md:col-span-1 text-center">${(producto.quantity || 0) * (producto.price || 0)}</div>
+                        
+                        {/* Delete button */}
                         <div className="col-span-1 text-center">
                             <button 
                                 onClick={() => handleRemoveProduct(producto.id)}
-                                className="text-red-500 hover:text-red-700"
+                                className="text-red-500 hover:text-red-700 cursor-pointer"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -147,7 +155,7 @@ const Cart = () => {
             </div>
             
             {/* Right side - Cart summary */}
-            <div className="w-96 bg-white rounded-lg shadow-md p-6">
+            <div className="xl:w-96 bg-white rounded-lg shadow-md p-6 md:w-48">
                 <h2 className="text-xl font-bold mb-4 text-black">Resumen de la compra</h2>
                 <div className={`space-y-2 mb-4 ${styles.textCart}`}>
                     <div className="flex justify-between">
