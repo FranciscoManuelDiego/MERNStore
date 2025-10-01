@@ -10,7 +10,7 @@ export const styles = {
   // Button styles
   btnPrimary: "bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer",
   
-  btnNav: "text-black px-4 py-2 font-medium cursor-pointer ",
+  btnNav: "text-black px-4 py-2 font-medium cursor-pointer hover:bg-yellow-400 hover:text-black rounded-lg transition-all duration-300",
 
   btnLoginNav: "block text-black text-center px-4 py-2 text-sm",
   
@@ -89,6 +89,8 @@ export const styles = {
   cartContainer: "container bg-white shadow-lg rounded-lg p-6 text-center sm:w-[300px] md:w-[400px] mx-auto mt-5",
 
   profileRegisterContainer: "bg-white p-8 rounded-lg shadow-md m-5 xl:w-[600px] md:w-[500px]",
+
+  fieldRegister: "border-gray-500 border-2 xl:w-[450px] md:w-[400px] sm:w-[300px] w-full py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium",
 
   //Carrousel styles
   carouselContainer: "relative max-w-[1200px] mx-auto",

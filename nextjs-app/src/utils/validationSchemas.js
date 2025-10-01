@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-
+//API: https://apis.datos.gob.ar/georef/api/
 // Shared email validation schema
 export const emailValidationSchema = Yup.string()
   .matches(
@@ -53,23 +53,28 @@ export const createEmailUpdateValidation = (currentUserEmail) =>
 
 // Shared validation schemas
 export const validationSchemas = {
-  firstName: Yup.string().required('Nombre es requerido'),
-  surname: Yup.string().required('Apellido es requerido'),
-  address: Yup.string().required('Dirección es requerida'),
-  phonenumber: Yup.string().required('Teléfono es requerido')
+  firstName: Yup.string().required('El Nombre es requerido'),
+  surname: Yup.string().required('El Apellido es requerido'),
+  province: Yup.string().required('La Provincia es requerida'), 
+  city: Yup.string().required('La Ciudad es requerida'),
+  streetAddress: Yup.string().required('La Dirección es requerida'),
+  phonenumber: Yup.string().required('El teléfono es requerido')
   .matches(/^(\+\d{1,3}\s?)?\d{8,15}$/, 'Número de teléfono inválido')
   .min(8, 'Mínimo 8 dígitos')
   .max(15, 'Máximo 15 dígitos'), 
-  phone: Yup.string().required('Teléfono es requerido')
+  phone: Yup.string().required('El teléfono es requerido')
   .matches(/^(\+\d{1,3}\s?)?\d{8,15}$/, 'Número de teléfono inválido')
   .min(8, 'Mínimo 8 dígitos')
   .max(15, 'Máximo 15 dígitos'), 
-  password: Yup.string().min(4, 'La contraseña debe tener al menos 4 caracteres').required('Contraseña es requerida'),
-  newPassword: Yup.string().min(6, 'La nueva contraseña debe tener al menos 6 caracteres').required('Nueva contraseña es requerida'),
-  currentPassword: Yup.string().required('Contraseña actual es requerida'),
+  password: Yup.string().min(4, 'La contraseña debe tener al menos 4 caracteres').required('La Contraseña es requerida'),
+  newPassword: Yup.string().min(6, 'La nueva contraseña debe tener al menos 6 caracteres').required('La Nueva contraseña es requerida'),
+  currentPassword: Yup.string().required('La Contraseña actual es requerida'),
   confirmPassword: Yup.string()
     .required('Confirmar contraseña es requerido')
-    .oneOf([Yup.ref('newPassword')], 'Las contraseñas no coinciden'),
+    .oneOf([Yup.ref('password')], 'Las contraseñas no coinciden'),
+  confirmNewPassword: Yup.string()
+    .required('Confirmar contraseña es requerido')
+    .oneOf([Yup.ref('newPassword')], 'Las contraseñas no coinciden'), 
 };
 
 // Complete registration schema
@@ -77,20 +82,25 @@ export const registrationSchema = Yup.object({
   firstName: validationSchemas.firstName,
   surname: validationSchemas.surname,
   email: emailWithExistenceCheck,
-  address: validationSchemas.address,
+  province: validationSchemas.province,
+  city: validationSchemas.city,
+  streetAddress: validationSchemas.streetAddress,
   phonenumber: validationSchemas.phonenumber, 
-  password: validationSchemas.password
+  password: validationSchemas.password,
+  confirmPassword: validationSchemas.confirmPassword
 });
 
 // Profile update schemas
 export const profileUpdateSchemas = {
   address: Yup.object({
-    address: validationSchemas.address
+    province: validationSchemas.province,
+    city: validationSchemas.city,
+    streetAddress: validationSchemas.streetAddress
   }),
   password: Yup.object({
     currentPassword: validationSchemas.currentPassword,
     newPassword: validationSchemas.newPassword,
-    confirmPassword: validationSchemas.confirmPassword
+    confirmPassword: validationSchemas.confirmNewPassword
   }),
   phone: Yup.object({
     phone: validationSchemas.phone

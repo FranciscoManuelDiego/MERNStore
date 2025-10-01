@@ -56,11 +56,14 @@ export const useCheckout = () => {
     try {
       const orderData = {
         items: cart.map((item: any) => ({
-          product: item.id,
+          productId: item._id || item.productId,
+          name: item.id,
           quantity: item.quantity,
+          imageUrl: item.imageUrl,
           price: item.price
         })),
-        total: cart.reduce((total: number, item: { price: number; quantity: number }) => total + (item.price * item.quantity), 0)
+        total: cart.reduce((total: number, item: { price: number; quantity: number }) => total + (item.price * item.quantity), 0),
+        address: cart.user.address // <-- Add this line if not present
       };
       
       const response = await axios.post(

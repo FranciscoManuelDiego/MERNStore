@@ -22,7 +22,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  address: {
+  province: {
+    type: String,
+    default: '',
+  },
+  city:{
+    type: String,
+    default: '',
+  },
+  streetAddress: {
     type: String,
     default: '',
   },

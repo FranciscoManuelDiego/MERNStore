@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Order from '../../../models/Order';
 import User from '../../../models/User';
 import connectDB from '../../lib/mongodb';
-import { EmailService } from 'nextjsproject/app/lib/email';
+import { EmailService } from '../../lib/email';
 import jwt from 'jsonwebtoken';
 
 // First initialize the email Service
@@ -34,17 +34,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Invalid token' }, { status: 401 });
     }
 
-    const { items, total, address } = await request.json();
-    console.log('Order data received:', { userId, items, total, address });
+    const { items, total, province, city, streetAddress } = await request.json();
+    
+    // 🔍 DEBUG: Check what address data is actually received
+    console.log('Received address data:', {
+        province: province,
+        city: city,
+        streetAddress: streetAddress,
+        hasProvince: !!province,
+        hasCity: !!city,
+        hasStreetAddress: !!streetAddress
+    });
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ message: 'Invalid order data' }, { status: 400 });
     }
-
-    if (!address) {
-      return NextResponse.json({ message: 'Address is required' }, { status: 400 });
-    }
-
 
     await connectDB();
 
@@ -56,6 +60,10 @@ export async function POST(request: NextRequest) {
 
     console.log('User found:', { name: user.firstName, email: user.email, phone: user.phonenumber }); // Debug
 
+    if (!streetAddress || !province || !city) {
+      return NextResponse.json({ message: 'Address information is required' }, { status: 400 });
+    }
+
     // Validate that each item has all required fields
         const validatedItems = items.map((item) => {
             if (!item.productId || !item.name || !item.imageUrl || !item.price || !item.quantity) {
@@ -64,9 +72,9 @@ export async function POST(request: NextRequest) {
             return {
                 productId: item.productId,
                 name: item.name,
+                quantity: Number(item.quantity),
                 imageUrl: item.imageUrl,
                 price: Number(item.price),
-                quantity: Number(item.quantity)
             };
         });
 
@@ -79,7 +87,11 @@ export async function POST(request: NextRequest) {
             imageUrl: user.imageUrl,
             customerName: user.firstName,
             customerPhone: user.phonenumber,
-            address: address,
+            address: {
+                address: streetAddress,  // Match the schema field name
+                province: province,      // Now supported by updated schema
+                city: city              // Now supported by updated schema
+            },
             items: validatedItems,
             total: total,
             status: 'pending'
@@ -110,7 +122,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating order:', error);
     return NextResponse.json({ 
-      message: 'Internal server error' 
+      message: 'Internal server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }

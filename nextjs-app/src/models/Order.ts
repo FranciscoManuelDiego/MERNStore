@@ -10,6 +10,8 @@ const orderItemSchema = new mongoose.Schema({
 
 const AddressSchema = new mongoose.Schema({
     address: { type: String, required: true },
+    province: { type: String, required: false },
+    city: { type: String, required: false },
 });
 
 const orderSchema = new mongoose.Schema({

@@ -28,13 +28,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Debug: Check what's actually in the database
+    console.log('Raw user from database:', {
+      id: user._id,
+      firstName: user.firstName,
+      email: user.email,
+      province: user.province,
+      city: user.city,
+      streetAddress: user.streetAddress,
+      // Check if these fields exist
+      hasProvince: !!user.province,
+      hasCity: !!user.city,
+      hasStreetAddress: !!user.streetAddress
+    });
+
     const userProfile = {
       id: user._id,
       firstName: user.firstName,
       surname: user.surname,
       email: user.email,
-      phonenumber: user.phonenumber, // Fixed: use phonenumber from model
+      phonenumber: user.phonenumber,
       address: user.address,
+      // Add the missing address fields
+      province: user.province,
+      city: user.city,
+      streetAddress: user.streetAddress,
     };
 
     return NextResponse.json(userProfile, { status: 200 });

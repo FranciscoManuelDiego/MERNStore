@@ -1,11 +1,13 @@
 "use client"
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useArgentinaLocations } from '../../hooks/useArgentinaLocations';
 import { useRouter } from "next/navigation";
 import { styles } from '../../styles/styleClasses';
 import { registrationSchema } from '../../utils/validationSchemas';
 
 export default function Register() {
   const router = useRouter();
+  const { provinces, cities, loading, error, fetchCitiesByProvince } = useArgentinaLocations();
 
   // Function to handle form submission client side
   const handleSubmit = async (values, { setSubmitting, resetForm, setFieldError }) => {
@@ -43,9 +45,12 @@ export default function Register() {
           firstName: '',
           surname: '',
           email: '',
-          address: '',
+          province: '',
+          city: '',
+          streetAddress: '',
           phonenumber: '',
-          password: ''
+          password: '',
+          confirmPassword: ''
         }}
         validationSchema={registrationSchema}
         onSubmit={handleSubmit}
@@ -59,7 +64,7 @@ export default function Register() {
               type="text"
               name="firstName"
               placeholder="Escribe tu nombre"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
             <ErrorMessage name="firstName" component="span" className="block text-red-500 text-xs mt-1" />
 
@@ -68,8 +73,7 @@ export default function Register() {
               type="text"
               name="surname"
               placeholder="Escribe tu apellido"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black 
-               rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
             <ErrorMessage name="surname" component="span" className="block text-red-500 text-xs mt-1" />
 
@@ -78,25 +82,72 @@ export default function Register() {
               type="email"
               name="email"
               placeholder="Escribe tu e-mail"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
             <ErrorMessage name="email" component="span" className="block text-red-500 text-xs mt-1" />
+
+            <label className="block mt-2 ml-2 text-black font-medium">Provincia</label>
+            <Field name="province">
+              {({ field, form }) => (
+                <select
+                  {...field}
+                  className={`${styles.fieldRegister}`}
+                  onChange={(e) => {
+                    const selectedProvinceName = e.target.value;
+                    
+                    // Update Formik state
+                    form.setFieldValue('province', selectedProvinceName);
+                    form.setFieldValue('city', ''); // Clear city when province changes
+                    
+                    // Fetch cities for selected province
+                    const selectedProvince = provinces.find(prov => prov.name === selectedProvinceName);
+                    if (selectedProvince) {
+                      fetchCitiesByProvince(selectedProvince.id);
+                    }
+                  }}
+                >
+                  <option value="">Selecciona una provincia</option>
+                  {provinces.map(province => (
+                    <option key={province.id} value={province.name}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+
+            {/* City Dropdown */}
+            <label className="block mt-2 ml-2 text-black font-medium" >Ciudad</label>
+            <Field as="select" 
+            name="city"
+            className={`${styles.fieldRegister}`}
+            >
+              <option value="">Selecciona una ciudad</option>
+              {cities.map(city => (
+                <option key={city.id} value={city.name}>
+                  {city.name}
+                </option>
+              ))}
+            </Field>
+
+            {loading && <p>Cargando provincias...</p>}
+            {error && <p className="text-red-500">Error: {error}</p>}
 
             <label className="block mt-2 ml-2 text-black font-medium">Direccion</label>
             <Field
               type="text"
-              name="address"
+              name="streetAddress"
               placeholder="Escribe tu dirección"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
-            <ErrorMessage name="address" component="span" className="block text-red-500 text-xs mt-1" />
+            <ErrorMessage name="streetAddress" component="span" className="block text-red-500 text-xs mt-1" />
 
             <label className="block mt-2 ml-2 text-black font-medium">Telefono</label>
             <Field
               type="text"
               name="phonenumber"
               placeholder="Escribe tu teléfono"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
             <ErrorMessage name="phonenumber" component="span" className="block text-red-500 text-xs mt-1" />
 
@@ -105,9 +156,18 @@ export default function Register() {
               type="password"
               name="password"
               placeholder="Escribe tu contraseña"
-              className="border-gray-500 border-2 xl:w-[450px] py-4 px-6 placeholder:text-secondary text-black rounded-lg font-medium"
+              className={`${styles.fieldRegister}`}
             />
             <ErrorMessage name="password" component="span" className="block text-red-500 text-xs mt-1" />
+
+             <label className="block mt-2 ml-2 text-black font-medium">Confirmar Contraseña</label>
+            <Field
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirma tu contraseña"
+              className={`${styles.fieldRegister}`}
+            />
+            <ErrorMessage name="confirmPassword" component="span" className="block text-red-500 text-xs mt-1" />
 
             <button
               type="submit"

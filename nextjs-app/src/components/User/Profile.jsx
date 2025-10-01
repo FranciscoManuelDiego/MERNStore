@@ -1,13 +1,15 @@
 "use client"
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { styles } from '../../styles/styleClasses';
+import { useArgentinaLocations } from '../../hooks/useArgentinaLocations';
 import { useAuth } from '../../hooks/useAuth';
 import { profileUpdateSchemas, createEmailUpdateSchema } from '../../utils/validationSchemas';
 
 export default function Profile() {
     const { user, profile, isLoadingProfile, refreshProfile } = useAuth();
+    const { provinces, cities, loading, error, fetchCitiesByProvince } = useArgentinaLocations();
     const [activeTab, setActiveTab] = useState('profile');
     const [message, setMessage] = useState({ type: '', text: '' });
 
@@ -66,7 +68,9 @@ export default function Profile() {
                         <div className="bg-white shadow-lg rounded-lg p-6">
                             <h2 className={styles.profileTexting}>{profile.firstName} {profile.surname}</h2>
                             <p className={styles.profileTexting}>Email: {profile.email}</p>
-                            <p className={styles.profileTexting}>Dirección: {profile.address || 'No registrada'}</p>
+                            <p className={styles.profileTexting}>Dirección: {' '}
+                            {(profile.province && profile.city && profile.streetAddress) ? 
+                            `${profile.province}, ${profile.city}, ${profile.streetAddress}` : 'No registrada'}</p>
                             <p className={styles.profileTexting}>Teléfono: {profile.phonenumber || 'No registrado'}</p>
                         </div>
                     ) :  <p>Cargando...</p>
@@ -74,7 +78,11 @@ export default function Profile() {
                 {/* Address Form */}
                 {activeTab === 'address' && (
                     <Formik
-                        initialValues={{ address: profile?.address || '' }}
+                        initialValues={{ 
+                            streetAddress: profile?.streetAddress || '',
+                            province: profile?.province || '',
+                            city: profile?.city || ''
+                        }}
                         validationSchema={profileUpdateSchemas.address}
                         onSubmit={async (values, { setSubmitting }) => {
                             setMessage({ type: '', text: '' });
@@ -108,11 +116,62 @@ export default function Profile() {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
                                     <Field
                                         type="text"
-                                        name="address"
+                                        name="streetAddress"
                                         placeholder="Ingresa tu dirección completa"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
-                                    <ErrorMessage name="address" component="span" className="block text-red-500 text-xs mt-1" />
+                                    <ErrorMessage name="streetAddress" component="span" className="block text-red-500 text-xs mt-1" />
+
+                                    {/* Province Dropdown */}
+                                    <label className="block mt-2 ml-2 text-black font-medium">Provincia</label>
+                                    <Field name="province"
+                                    className={`${styles.inputProfile} text-black`} 
+                                    as="select">
+                                    {({ field, form }) => (
+                                        <select
+                                        {...field}
+                                        className={`${styles.fieldRegister}`}
+                                        onChange={(e) => {
+                                            const selectedProvinceName = e.target.value;
+                                            
+                                            // Update Formik state
+                                            form.setFieldValue('province', selectedProvinceName);
+                                            form.setFieldValue('city', ''); // Clear city when province changes
+                                            
+                                            // Fetch cities for selected province
+                                            const selectedProvince = provinces.find(prov => prov.name === selectedProvinceName);
+                                            if (selectedProvince) {
+                                            fetchCitiesByProvince(selectedProvince.id);
+                                            }
+                                        }}
+                                        >
+                                        <option value="">Selecciona una provincia</option>
+                                        {provinces.map(province => (
+                                            <option key={province.id} value={province.name}>
+                                            {province.name}
+                                            </option>
+                                        ))}
+                                        </select>
+                                    )}
+                                    </Field>
+
+                                    {/* City Dropdown */}
+                                    <label className="block mt-2 ml-2 text-black font-medium" >Ciudad</label>
+                                    <Field as="select" 
+                                    name="city"
+                                    className={`${styles.fieldRegister}`}
+                                    >
+                                    <option value="">Selecciona una ciudad</option>
+                                    {cities.map(city => (
+                                        <option key={city.id} value={city.name}>
+                                        {city.name}
+                                        </option>
+                                    ))}
+                                    </Field>
+
+                                    {loading && <p>Cargando provincias...</p>}
+                                    {error && <p className="text-red-500">Error: {error}</p>}
+
                                 </div>
                                 <button
                                     type="submit"
@@ -163,7 +222,7 @@ export default function Profile() {
                                         type="password"
                                         name="currentPassword"
                                         placeholder="Ingresa tu contraseña actual"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
                                     <ErrorMessage name="currentPassword" component="span" className="block text-red-500 text-xs mt-1" />
                                 </div>
@@ -173,7 +232,7 @@ export default function Profile() {
                                         type="password"
                                         name="newPassword"
                                         placeholder="Ingresa tu nueva contraseña (mínimo 4 caracteres)"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
                                     <ErrorMessage name="newPassword" component="span" className="block text-red-500 text-xs mt-1" />
                                 </div>
@@ -183,7 +242,7 @@ export default function Profile() {
                                         type="password"
                                         name="confirmPassword"
                                         placeholder="Confirma tu nueva contraseña"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
                                     <ErrorMessage name="confirmPassword" component="span" className="block text-red-500 text-xs mt-1" />
                                 </div>
@@ -241,7 +300,7 @@ export default function Profile() {
                                         type="text"
                                         name="email"
                                         placeholder="ejemplo@email.com"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
                                     <ErrorMessage name="email" component="span" className="block text-red-500 text-xs mt-1" />
                                 </div>
@@ -295,7 +354,7 @@ export default function Profile() {
                                         type="text"
                                         name="phone"
                                         placeholder="+54 11 1234-5678"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none placeholder:text-gray-700 text-black focus:ring-2 focus:ring-yellow-500"
+                                        className={`${styles.inputProfile} text-black`}
                                     />
                                     <ErrorMessage name="phone" component="span" className="block text-red-500 text-xs mt-1" />
                                 </div>

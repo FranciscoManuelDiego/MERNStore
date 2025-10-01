@@ -9,6 +9,7 @@ import CartWidget from '../CartWidget';
 export default function Navbar() {
     const [showMenu, setShowMenu] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
+
     const { user } = useAuth();
 
     return (
@@ -22,9 +23,11 @@ export default function Navbar() {
                     </Link>
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center space-x-8 relative">
-                            {/* Category Links */}
-                            <button onClick={() => setShowCategories(!showCategories)}
-                            className={styles.btnNav}>Categorias 
+                         {/* Category Links */}
+                        <div 
+                        onMouseEnter={() => setShowCategories(true)}
+                        onMouseLeave={() => setShowCategories(false)}>
+                            <button className={styles.btnNav}>Categorias
                             <svg className="w-6 h-6 text-black inline-block ml-1" 
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
                             fill="none" viewBox="0 0 24 24">
@@ -37,32 +40,34 @@ export default function Navbar() {
                                 <Link 
                                     href="/categories/mates" 
                                     className={styles.btnCategory}
-                                    onClick={() => setShowCategories(false)}
                                 >
                                     Mates
                                 </Link>
                                 <Link 
                                     href="/categories/termos" 
                                     className={styles.btnCategory}
-                                    onClick={() => setShowCategories(false)}
                                 >
                                     Termos
                                 </Link>
                                 </div>
                             )}
+                        </div>
                         {/* Login and Register Links */}
-                        {user ? (
-                            <>
-                                <LoginLogo />
+                        <div className="hidden md:flex items-center space-x-4">
+                        {user  ? (
+                            <div className='flex items-center space-x-4'>
+                                <div className='relative'>
+                                    <LoginLogo />
+                                </div>
                                 <Link 
                                     href="/Cart" 
                                     className={styles.btnPrimary}
                                 >
                                     <CartWidget />
                                 </Link>
-                            </>
+                            </div>
                         ) : (
-                            <>
+                            <div className='flex items-center space-x-4'>
                                 <Link 
                                     href="/login" 
                                     className={styles.btnNav}
@@ -81,8 +86,9 @@ export default function Navbar() {
                                 >
                                     <CartWidget />
                                 </Link>
-                            </>
+                            </div>
                         )}
+                        </div>
                     </div>
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">

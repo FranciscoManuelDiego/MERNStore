@@ -11,7 +11,10 @@ export default function LoginLogo() {
     const router = useRouter();
 
     return (
-        <div className="relative">
+        <div className="relative"
+            onMouseEnter={() => setShowDropdown(true)}
+            onMouseLeave={() => setShowDropdown(false)}
+        >
             <button 
                 onClick={() => setShowDropdown(!showDropdown)}
                 className="flex items-center space-x-2 text-black px-4 py-2 font-medium"
@@ -21,12 +24,12 @@ export default function LoginLogo() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
             </button>
-
             {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                <div className="absolute right-0 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link 
                         href="/profile" 
                         className={`${styles.btnLoginNav} hover:bg-yellow-400 rounded-lg transition-all duration-300 font-medium`}
+                        onClick={() => setShowDropdown(false)}
                     >
                         👤 Mi Perfil
                     </Link>

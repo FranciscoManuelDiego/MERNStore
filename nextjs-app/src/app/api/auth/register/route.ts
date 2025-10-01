@@ -8,10 +8,10 @@ export async function POST(request: NextRequest) {
     await connectDB();
     
     const body = await request.json();
-    const { firstName, surname, email, password, address, phonenumber } = body;
+    const { firstName, surname, email, password, province, city, streetAddress, phonenumber } = body;
 
     // Validation
-    if (!firstName || !surname || !email || !password || !address || !phonenumber) {
+    if (!firstName || !surname || !email || !password || !streetAddress || !phonenumber || !province || !city) {
       return NextResponse.json(
         { error: 'Todos los campos requeridos deben estar completos' },
         { status: 400 }
@@ -36,7 +36,9 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
       phonenumber: phonenumber || '',
-      address: address || '',
+      province: body.province || '',
+      city: body.city || '',
+      streetAddress: streetAddress || '',
     });
     
     await newUser.save();
@@ -48,7 +50,9 @@ export async function POST(request: NextRequest) {
       surname: newUser.surname,
       email: newUser.email,
       phonenumber: newUser.phonenumber,
-      address: newUser.address,
+      province: newUser.province,
+      city: newUser.city,
+      streetAddress: newUser.streetAddress,
     };
 
     return NextResponse.json(

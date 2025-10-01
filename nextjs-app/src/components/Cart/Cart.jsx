@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useCart, useCartCalculations } from '../../hooks/useCart';
 
 const Cart = () => {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const { cart, removeProduct, cleanCart } = useCart();
     const { totalPrice, totalItems} = useCartCalculations();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -29,17 +29,36 @@ const Cart = () => {
         setIsProcessing(true);
         
         try {
+            console.log('Cart item example:', cart[0]); // Debug to see actual fields
+            console.log('All cart item fields:', Object.keys(cart[0])); // Show all available fields
+            console.log('Profile data:', profile); // Debug profile data
+            console.log('Address fields check:', {
+                province: profile?.province,
+                city: profile?.city, 
+                streetAddress: profile?.streetAddress
+            });
+
+            // Check if user has address info - if not, prompt them
+            if (!profile?.province || !profile?.city || !profile?.streetAddress) {
+                alert('Por favor completa tu información de dirección en tu perfil antes de realizar el pedido.');
+                return; // Don't create order without address
+            }
+
             const orderData = {
                 items: cart.map(item => ({
-                    productId: item._id || item.productId,
-                    name: item.name,
-                    quantity: item.cantidad,
-                    imageUrl: item.imageUrl || item.imgUrl, // Check your field names
-                    price: item.precio
+                    productId: item.id,           // Use item.id for productId
+                    name: item.name,              // Use item.name for name
+                    quantity: item.quantity,
+                    imageUrl: item.img,           // Use item.img for imageUrl
+                    price: item.price             // Add the missing price field
                 })),
                 total: totalPrice,
-                address: user.address
+                province: profile.province,       // Remove optional chaining since we checked above
+                city: profile.city,               // Remove optional chaining since we checked above
+                streetAddress: profile.streetAddress // Remove optional chaining since we checked above
             };
+            
+            console.log('Final order data being sent:', orderData); // Debug what's actually sent
             
             const response = await fetch('/api/orders', {
                 method: 'POST',
@@ -68,7 +87,7 @@ const Cart = () => {
         return (
             <div className={styles.cartContainer}>
                 <h1 className="text-2xl font-bold text-green-600 mb-4">¡Pedido Completado!</h1>
-                <p className={`${styles.cartH1} mt-4 `}>Tu pedido ha sido procesado correctamente.</p>
+                <p className={`${styles.cartH1} mt-4 `}>Tu pedido ha sido procesado correctamente, chequea tu correo o tu whatsapp para más detalles.</p>
                 <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                     Seguir Comprando
                 </Link>
