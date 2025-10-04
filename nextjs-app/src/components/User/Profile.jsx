@@ -85,11 +85,14 @@ export default function Profile() {
                         }}
                         validationSchema={profileUpdateSchemas.address}
                         onSubmit={async (values, { setSubmitting }) => {
+                            
                             setMessage({ type: '', text: '' });
                             try {
                                 const response = await axios.put(
-                                    "/api/auth/profile/address",
-                                    { address: values.address },
+                                    "http://localhost:3000/api/auth/profile/address",
+                                    { streetAddress: values.streetAddress,
+                                     province: values.province, 
+                                     city: values.city },
                                     { withCredentials: true }
                                 );
                                 

@@ -20,9 +20,9 @@ export async function PUT(request: NextRequest) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
     
     const body = await request.json();
-    const { address } = body;
+    const { streetAddress ,province, city  } = body;
 
-    if (!address) {
+    if (!streetAddress || !province || !city) {
       return NextResponse.json(
         { error: 'Dirección es requerida' },
         { status: 400 }
@@ -32,7 +32,9 @@ export async function PUT(request: NextRequest) {
     // Update user address
     const updatedUser = await User.findByIdAndUpdate(
       decoded.userId,
-      { address },
+      { province: body.province || '',
+         city: body.city || '', 
+         streetAddress: body.streetAddress || '' },
       { new: true }
     ).select('-password');
 
@@ -52,7 +54,9 @@ export async function PUT(request: NextRequest) {
           surname: updatedUser.surname,
           email: updatedUser.email,
           phone: updatedUser.phone,
-          address: updatedUser.address,
+          province: body.province || '',
+          city: body.city || '',
+          streetAddress: body.streetAddress || '',
         }
       },
       { status: 200 }
