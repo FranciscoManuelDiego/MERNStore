@@ -2,9 +2,9 @@
 "use client"; // This directive ensures client-side execution
 
 import { useState, useEffect, useContext } from 'react';
+import api from '../app/lib//api';
 import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 
 // Hook for authentication logic
 export const useAuth = () => {
@@ -50,7 +50,7 @@ export const useLogout = () => {
 
   const logoutUser = async () => {
     try {
-      await axios.post('http://localhost:3000/api/auth/logout', {}, { withCredentials: true });
+      await api.post('/api/auth/logout', {}, { withCredentials: true });
       logout();
       router.push('/');
     } catch (error) {

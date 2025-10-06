@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import axios from 'axios';
+import api from '../app/lib/api';
 
 // Types
 interface Product {
@@ -25,7 +25,7 @@ export const useProducts = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:3000/api/products');
+        const response = await api.get('/api/products');
         setProducts(response.data);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error al cargar productos');
@@ -77,7 +77,7 @@ export const useProduct = (productId: string) => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/api/products/${productId}`);
+        const response = await api.get(`/api/products/${productId}`);
         setProduct(response.data);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Error al cargar producto');

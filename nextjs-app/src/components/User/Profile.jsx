@@ -1,5 +1,6 @@
 "use client"
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../../app/lib//api';
 import { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { styles } from '../../styles/styleClasses';
@@ -88,8 +89,8 @@ export default function Profile() {
                             
                             setMessage({ type: '', text: '' });
                             try {
-                                const response = await axios.put(
-                                    "http://localhost:3000/api/auth/profile/address",
+                                const response = await api.put(
+                                    "api/auth/profile/address",
                                     { streetAddress: values.streetAddress,
                                      province: values.province, 
                                      city: values.city },
@@ -195,8 +196,8 @@ export default function Profile() {
                         onSubmit={async (values, { setSubmitting, resetForm }) => {
                             setMessage({ type: '', text: '' });
                             try {
-                                const response = await axios.put(
-                                    "http://localhost:3000/api/auth/profile/password",
+                                const response = await api.put(
+                                    "api/auth/profile/password",
                                     {
                                         currentPassword: values.currentPassword,
                                         newPassword: values.newPassword
@@ -268,8 +269,8 @@ export default function Profile() {
                         onSubmit={async (values, { setSubmitting, setFieldError }) => {
                             setMessage({ type: '', text: '' });
                             try {
-                                const response = await axios.put(
-                                    "http://localhost:3000/api/auth/profile/email",
+                                const response = await api.put(
+                                    "api/auth/profile/email",
                                     { email: values.email },
                                     { withCredentials: true }
                                 );
@@ -326,8 +327,8 @@ export default function Profile() {
                         onSubmit={async (values, { setSubmitting }) => {
                             setMessage({ type: '', text: '' });
                             try {
-                                const response = await axios.put(
-                                    "/api/auth/profile/phone",
+                                const response = await api.put(
+                                    "api/auth/profile/phone",
                                     { phone: values.phone },
                                     { withCredentials: true }
                                 );

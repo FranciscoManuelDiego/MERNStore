@@ -3,8 +3,7 @@
 
 import { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../context/CartContext';
-import axios from 'axios';
-
+import api from '../app/lib/api';
 // Hook for cart context
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -66,8 +65,8 @@ export const useCheckout = () => {
         address: cart.user.address // <-- Add this line if not present
       };
       
-      const response = await axios.post(
-        'http://localhost:3000/api/orders', 
+      const response = await api.post(
+        '/api/orders', 
         orderData,
         { withCredentials: true }
       );

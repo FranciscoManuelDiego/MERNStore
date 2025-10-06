@@ -53,7 +53,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    console.log('Form submission started');
+    //console.log('Form submission started');
     
     // Clear previous errors
     setSubmitError("");
