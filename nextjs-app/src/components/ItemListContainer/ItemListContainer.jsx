@@ -58,12 +58,12 @@ const ItemListContainer = () => {
                 return res.json();
             })
             .then(data => {
-                console.log('📦 Raw API response:', data);
-                console.log('📦 Products array:', data.products);
-                console.log('📦 Products length:', data.products?.length);
-                console.log('📦 Total count:', data.totalCount);
-                console.log('📦 Total pages:', data.totalPages);
-                
+                //console.log('📦 Raw API response:', data);
+                //console.log('📦 Products array:', data.products);
+                //console.log('📦 Products length:', data.products?.length);
+                //console.log('📦 Total count:', data.totalCount);
+                //console.log('📦 Total pages:', data.totalPages);
+
                 setProducts(data.products || []);
                 setPagination({
                     currentPage: data.page || currentPage,
@@ -83,12 +83,12 @@ const ItemListContainer = () => {
             });
     }, [activeCategory, currentPage]);
 
-    console.log('🎨 Rendering with:', {
-        loading,
-        error,
-        productsCount: products.length,
-        filteredProductsCount: products.length
-    });
+    //console.log('🎨 Rendering with:', {
+       // loading,
+       // error,
+       // productsCount: products.length,
+       // filteredProductsCount: products.length
+    //});
 
     // Since API already filters, use products directly
     const filteredProducts = products;
@@ -136,7 +136,7 @@ const ItemListContainer = () => {
         );
     }
 
-    console.log('✅ Rendering products list with', products.length, 'items');
+    //console.log('✅ Rendering products list with', products.length, 'items');
     return (
         <>
             {/* Show current category */}
