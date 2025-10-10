@@ -4,6 +4,7 @@ import { useArgentinaLocations } from '../../hooks/useArgentinaLocations';
 import { useRouter } from "next/navigation";
 import { styles } from '../../styles/styleClasses';
 import { registrationSchema } from '../../utils/validationSchemas';
+import api from '../../app/lib//api';
 
 export default function Register() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function Register() {
   // Function to handle form submission client side
   const handleSubmit = async (values, { setSubmitting, resetForm, setFieldError }) => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/register", {
+      const response = await api.put("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values)
