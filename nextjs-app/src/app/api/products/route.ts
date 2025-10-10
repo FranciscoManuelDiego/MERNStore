@@ -14,15 +14,15 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get('limit') || '6', 10);
         const skip = (page - 1) * limit;
 
-        console.log('📝 API params:', { category, page, limit, skip });
+        //console.log('📝 API params:', { category, page, limit, skip });
 
         // Get ALL products first to see what we have
         const allProducts = await Product.find({}).limit(5);
-        console.log('📂 Sample products from DB:', allProducts.map(p => ({
-            name: p.name,
-            category: p.category,
-            id: p._id
-        })));
+        //console.log('📂 Sample products from DB:', allProducts.map(p => ({
+        //    name: p.name,
+        //    category: p.category,
+        //    id: p._id
+        //})));
 
         // Get all unique categories (case-sensitive)
         const allCategories = await Product.distinct('category');
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
                     $regex: new RegExp(`^${category}$`, 'i') // Case-insensitive exact match
                 }
             };
-            console.log('🔍 Using case-insensitive query:', query);
+           // console.log('🔍 Using case-insensitive query:', query);
         }
 
         const totalCount = await Product.countDocuments(query);
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
             .limit(limit)
             .sort({ createdAt: -1 });
 
-        console.log('📦 Products found:', products.length);
+       // console.log('📦 Products found:', products.length);
 
         return NextResponse.json({ 
             products, 

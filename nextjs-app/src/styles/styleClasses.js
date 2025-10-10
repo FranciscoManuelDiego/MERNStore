@@ -10,7 +10,7 @@ export const styles = {
   // Button styles
   btnPrimary: "bg-yellow-500 hover:bg-yellow-400 text-black font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 cursor-pointer",
   
-  btnNav: "text-black px-4 py-2 font-medium cursor-pointer hover:bg-yellow-400 hover:text-black rounded-lg transition-all duration-300",
+  btnNav: "flex items-center space-x-2 text-black px-4 py-2 font-medium cursor-pointer",
 
   btnLoginNav: "block text-black text-center px-4 py-2 text-sm",
   
@@ -23,9 +23,9 @@ export const styles = {
   
   mobileMenu: "flex flex-col md:hidden mt-4 space-y-2",
   
-  navContainer: "container mx-auto px-6 py-4",
+  navContainer: "container mx-auto px-2 py-2",
   
-  navHeader: "flex items-center justify-between",
+  navHeader: "flex items-center justify-between w-full",
   
   // Footer styles
   footerSticky: "bg-white shadow-lg border-t-4 border-yellow-400 w-full mt-auto",

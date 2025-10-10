@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link'; // Use Link from next/link for Next.js navigation
 import LoginLogo from './LoginLogo';
+import SearchBar from "../SearchBar/SearchBar"
 import { styles } from '../../styles/styleClasses';
 import { useAuth } from '../../hooks/useAuth';
 import CartWidget from '../CartWidget';
@@ -13,27 +14,28 @@ export default function Navbar() {
     const { user } = useAuth();
 
     return (
-        <nav className="bg-white to-yellow-600 shadow-lg border-b-4 border-yellow-400">
+        <nav className="bg-white to-yellow-600 shadow-lg border-b-4 border-yellow-400 ">
             <div className={styles.navContainer}>
-                <div className={styles.navHeader}>
+                <div className={`${styles.navHeader}`}>
                     {/* Logo */}
-                    <Link href="/" className="flex items-center space-x-2 text-black">
+                    <Link href="/" className="flex items-center space-x-2 text-black ml-4">
                         <span className="text-3xl">🧉</span>
                         <span className="text-2xl font-bold tracking-wide">Matecitos</span>
                     </Link>
+
                     {/* Navigation Links */}
-                    <div className="hidden md:flex items-center space-x-8 relative">
+                    <div className="hidden md:flex items-center space-x-2 gap-4 relative">
+                        {/*Search Bar component */}
+                        <SearchBar />
                          {/* Category Links */}
                         <div 
+                        className="hidden md:flex items-center gap-6 relative"
                         onMouseEnter={() => setShowCategories(true)}
                         onMouseLeave={() => setShowCategories(false)}>
                             <button className={styles.btnNav}>Categorias
-                            <svg className="w-6 h-6 text-black inline-block ml-1" 
-                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
-                            fill="none" viewBox="0 0 24 24">
-                            <path stroke="black" 
-                            strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7"/>
-                            </svg>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                </svg>
                             </button>
                             {showCategories && (
                                 <div className={styles.dropdownMenu}>
@@ -102,6 +104,7 @@ export default function Navbar() {
                 {/* Mobile Dropdown Menu */}
                 {showMenu && (
                     <div className="flex flex-col md:hidden mt-4 space-y-2">
+                            <SearchBar />
                             <Link 
                                     href="/categories/mates" 
                                     className="text-black hover:bg-yellow-400 px-4 py-2 rounded-lg transition-all duration-300 font-medium"

@@ -17,7 +17,7 @@ export default function LoginLogo() {
         >
             <button 
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="flex items-center space-x-2 text-black px-4 py-2 font-medium"
+                className={styles.btnNav}
             >
                 <span>Hola, {user.firstName}</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

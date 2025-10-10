@@ -29,6 +29,8 @@ const ProductSchema = new mongoose.Schema({
 }, {
   timestamps: true,
 });
+// Create a text index  for every product. Rebuild connection if needed
+ProductSchema.index({ '$**': 'text' });
 
 // Check if the model exists before creating it (for Next.js hot reload)
 const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
