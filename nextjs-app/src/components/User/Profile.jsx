@@ -129,12 +129,12 @@ export default function Profile() {
                                     {/* Province Dropdown */}
                                     <label className="block mt-2 ml-2 text-black font-medium">Provincia</label>
                                     <Field name="province"
-                                    className={`${styles.inputProfile} text-black`} 
+                                    className={`${styles.fieldRegister} text-black`} 
                                     as="select">
                                     {({ field, form }) => (
                                         <select
                                         {...field}
-                                        className={`${styles.fieldRegister}`}
+                                        className={`${styles.inputProfile} text-black`}
                                         onChange={(e) => {
                                             const selectedProvinceName = e.target.value;
                                             
@@ -163,7 +163,7 @@ export default function Profile() {
                                     <label className="block mt-2 ml-2 text-black font-medium" >Ciudad</label>
                                     <Field as="select" 
                                     name="city"
-                                    className={`${styles.fieldRegister}`}
+                                    className={`${styles.inputProfile} text-black`}
                                     >
                                     <option value="">Selecciona una ciudad</option>
                                     {cities.map(city => (

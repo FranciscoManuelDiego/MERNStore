@@ -1,13 +1,37 @@
-import { useState } from 'react';
-import {styles} from "../../styles/styleClasses"
+import { useState, useEffect, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const searchRef = useRef(null); // ✅ Add ref for click detection
+  const router = useRouter();
+
+  // ✅ Hide results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowResults(false);
+        setResults([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // ✅ Clear results when navigating to different pages
+  useEffect(() => {
+    setShowResults(false);
+    setQuery('');
+    setResults([]);
+  }, [router]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -20,13 +44,13 @@ const SearchBar = () => {
     try{
       const res = await fetch(`/api/products/search?q=${query}`);
       const data = await res.json();
-      console.log('Search results:', data);
-      setResults(data);
+      //console.log('Search results:', data);
+      setResults(Array.isArray(data) ? data : []);
       setShowResults(true);
     } catch (error) {
       console.error('Error fetching search results:', error);
       setResults([]);
-      setShowResults(false); // Hide on error too
+      setShowResults(true); // ✅ Still show dropdown with error message
     } finally {
       setIsSearching(false);
     }
@@ -37,14 +61,15 @@ const SearchBar = () => {
     const newQuery = e.target.value;
     setQuery(newQuery);
     
-    if (!newQuery.trim()) {
+    // ✅ Hide results if less than 4 characters
+    if (!newQuery.trim() || newQuery.trim().length < 4) {
       setShowResults(false);
       setResults([]);
     }
   };
 
   return (
-    <div className='relative'>
+    <div className='relative' ref={searchRef}>
       <form onSubmit={handleSearch} className="flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden ">
         <input
           type="text"
@@ -77,7 +102,7 @@ const SearchBar = () => {
                 <h3 className="font-semibold text-sm text-gray-800">{product.name}</h3>
                 <img src={product.imageUrl}
                  alt={product.name} 
-                 className="w-16 h-16 object-fit my-2"
+                 className="w-16 h-16 object-cover my-2"
                  />
                 <p className="text-sm text-gray-800">${product.price}</p>
                 <Link href={`/products/${product._id}`} className="text-blue-500 hover:underline">Ver producto</Link>
