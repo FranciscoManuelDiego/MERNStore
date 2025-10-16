@@ -29,14 +29,14 @@ const Cart = () => {
         setIsProcessing(true);
         
         try {
-            console.log('Cart item example:', cart[0]); // Debug to see actual fields
-            console.log('All cart item fields:', Object.keys(cart[0])); // Show all available fields
-            console.log('Profile data:', profile); // Debug profile data
-            console.log('Address fields check:', {
-                province: profile?.province,
-                city: profile?.city, 
-                streetAddress: profile?.streetAddress
-            });
+           // console.log('Cart item example:', cart[0]); // Debug to see actual fields
+           // console.log('All cart item fields:', Object.keys(cart[0])); // Show all available fields
+           // console.log('Profile data:', profile); // Debug profile data
+           // console.log('Address fields check:', {
+           //     province: profile?.province,
+           //     city: profile?.city,
+           //     streetAddress: profile?.streetAddress
+           // });
 
             // Check if user has address info - if not, prompt them
             if (!profile?.province || !profile?.city || !profile?.streetAddress) {
@@ -87,7 +87,7 @@ const Cart = () => {
         return (
             <div className={styles.cartContainer}>
                 <h1 className="text-2xl font-bold text-green-600 mb-4">¡Pedido Completado!</h1>
-                <p className={`${styles.cartH1} mt-4 `}>Tu pedido ha sido procesado correctamente, chequea tu correo o tu whatsapp para más detalles.</p>
+                <p className={`${styles.cartH1} mt-4 `}>Tu pedido ha sido procesado correctamente, chequea tu correo {profile.email} para más detalles.</p>
                 <Link href="/" className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300">
                     Seguir Comprando
                 </Link>
