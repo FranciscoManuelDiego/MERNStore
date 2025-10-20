@@ -1,5 +1,4 @@
 "use client"
-import { set } from 'mongoose';
 import { useState, useEffect } from 'react';
 
 
@@ -39,8 +38,8 @@ export const useArgentinaLocations = () => {
         }));
         console.log('Mapped Provinces:', mappedProvinces); // Debug log
         setProvinces(mappedProvinces);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'Unknown error occurred');
       } finally {
         setLoading(false);
       }
@@ -63,7 +62,7 @@ export const useArgentinaLocations = () => {
        const data = await citiesResponse.json();
 
         // Map the API response to the desired format
-      const mappedCities = data.municipios.map((city) => ({
+      const mappedCities = data.municipios.map((city: any) => ({
         id: city.id,
         name: city.nombre,
         province: provinces.find(prov => prov.id === provinceId)
@@ -71,7 +70,7 @@ export const useArgentinaLocations = () => {
         console.log('Mapped Cities:', mappedCities); // Debug log
         setCities(mappedCities);
       } catch (error) {
-        setError(error.message);
+        setError(error instanceof Error ? error.message : 'Unknown error occurred');
         setCities([]);
       } finally {
         setLoading(false);
