@@ -6,15 +6,7 @@ import { EmailService } from '../../lib/email';
 import jwt from 'jsonwebtoken';
 
 // First initialize the email Service
-const emailConfig = {
-  service: process.env.EMAIL_SERVICE!, // The ! asserts that this env var is defined thus states that it is a string
-  auth: {
-    user: process.env.EMAIL_USER!,
-    pass: process.env.EMAIL_PASS!
-  },
-};
-
-const emailService = new EmailService(emailConfig);
+const emailService = new EmailService();
 
 export async function POST(request: NextRequest) {
   try {

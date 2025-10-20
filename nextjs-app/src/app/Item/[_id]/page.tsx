@@ -2,13 +2,13 @@
 // The [_id] makes this a dynamic route that captures the product ID
 
 interface ItemPageProps {
-  params: {
+  params: Promise<{
     _id: string;
-  };
+  }>;
 }
 
-export default function ItemPage({ params }: ItemPageProps) {
-  const { _id } = params;
+export default async function ItemPage({ params }: ItemPageProps) {
+  const { _id } = await params;
   
   return (
     <div className="container mx-auto px-4 py-8">

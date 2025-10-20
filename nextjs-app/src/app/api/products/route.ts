@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
     } catch (error) {
         console.error('❌ Products API error:', error);
         return NextResponse.json(
-            { error: 'Error fetching products', details: error.message },
+            { error: 'Error fetching products', details: error instanceof Error ? error.message : 'Unknown error' },
             { status: 500 }
         );
     }

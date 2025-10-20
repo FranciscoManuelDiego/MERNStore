@@ -33,13 +33,13 @@ export const useArgentinaLocations = () => {
 
         const provincesData = await response.json();
         
-        const mappedProvinces = provincesData.provincias.map((prov) => ({
+        const mappedProvinces = provincesData.provincias.map((prov: any) => ({
           id: prov.id,
           name: prov.nombre,
         }));
         console.log('Mapped Provinces:', mappedProvinces); // Debug log
         setProvinces(mappedProvinces);
-      } catch (error) {
+      } catch (error: any) {
         setError(error.message);
       } finally {
         setLoading(false);
