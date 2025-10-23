@@ -5,3 +5,4 @@ dist
 .vercel
 *.tgz
 *.tar.gz
+VERCEL_ENV_SETUP.md
