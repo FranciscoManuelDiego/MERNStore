@@ -56,6 +56,7 @@ nextjs-app/
 │   │   ├── api/              # API routes
 │   │   │   ├── auth/         # Authentication endpoints
 │   │   │   ├── products/     # Product management
+│   │   │   ├── health/       # Informatio about deployment status.
 │   │   │   └── orders/       # Order processing
 │   │   ├── Cart/             # Cart page
 │   │   ├── categories/       # Category pages
@@ -196,7 +197,7 @@ The application uses a combination of:
 - **Custom CSS**: Component-specific styles in `styles/components.css`
 - **Style Classes**: Reusable style objects in `styles/styleClasses.js`
 
-## 🚀 Deployment
+##  Deployment
 
 ### Build for Production
 ```bash
@@ -212,28 +213,7 @@ Ensure all environment variables are properly set:
 ### Deployment Platforms
 This application can be deployed on:
 - **Vercel** (Recommended for Next.js)
-- **Netlify**
-- **Railway**
-- **DigitalOcean App Platform**
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🐛 Known Issues & Troubleshooting
-
-### Common Issues
-1. **Port 3000 in use**: The app automatically uses port 3001 if 3000 is occupied
-2. **MongoDB Connection**: Ensure your IP is whitelisted in MongoDB Atlas
-3. **Environment Variables**: Double-check all required environment variables are set
 
 ### Development Tips
 - Use `npm run dev` for development with hot reload
@@ -244,16 +224,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 👨‍💻 Author
 
 **FranDiego**
-- GitHub: [Your GitHub Profile]
-- Email: [Your Email]
+- GitHub: https://github.com/FranciscoManuelDiego
+- Email: franddiego@gmail.com
 
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- MongoDB for the robust database solution
-- Tailwind CSS for the utility-first CSS framework
-- React team for the powerful frontend library
-
----
 
 Built with ❤️ using Next.js and modern web technologies.
