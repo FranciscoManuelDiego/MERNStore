@@ -20,7 +20,10 @@ export const metadata: Metadata = {
   title: "Matecitos | MERN store",
   description: "Tu tienda de mates y termos favorita",
   icons: {
-    icon: '/MatecitoIcon.png',
+    icon: [
+      { url: '/MatecitoIcon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/MatecitoIcon.png', sizes: '16x16', type: 'image/png' },
+    ],
     shortcut: '/MatecitoIcon.png',
     apple: '/MatecitoIcon.png',
   },
